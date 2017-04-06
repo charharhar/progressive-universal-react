@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { render } from 'react-dom';
 
-const App = () => {
+const rootEl = document.querySelector('#app');
+
+class App extends Component{
   render() {
     return (
       <div>
@@ -9,3 +12,5 @@ const App = () => {
     )
   }
 }
+
+render(<App />, rootEl);

@@ -22,7 +22,7 @@ const client = {
   },
 
   output: {
-    path: path.resolve(appRootDir.get(), 'build'),
+    path: path.resolve(appRootDir.get(), 'build/client'),
     filename: '[name].js',
     chunkFilename: '[name]-[chunkhash].js',
     publicPath: '/static/',
@@ -44,7 +44,14 @@ const client = {
         }
       },
     ],
-  }
+  },
+
+  plugins: [
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+    }),
+    new webpack.NoEmitOnErrorsPlugin(),
+  ]
 };
 
 export default client;

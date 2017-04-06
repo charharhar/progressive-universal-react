@@ -64,7 +64,7 @@ module.exports =
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 3);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -78,6 +78,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _path = __webpack_require__(3);
+
+var _path2 = _interopRequireDefault(_path);
+
 var _express = __webpack_require__(2);
 
 var _express2 = _interopRequireDefault(_express);
@@ -90,6 +94,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var app = (0, _express2.default)();
 var PORT = 3000;
+
+app.use('/static', _express2.default.static('build'));
 
 app.get('*', function (req, res) {
   res.sendFile(_appRootDir2.default.get() + '/index.html');
@@ -115,6 +121,12 @@ module.exports = require("express");
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+module.exports = require("path");
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(0);
