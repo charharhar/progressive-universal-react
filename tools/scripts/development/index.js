@@ -14,15 +14,20 @@ const watcher = chokidar.watch([
 watcher.on('ready', () => {
   watcher.on('change', () => {
     console.log('Build configuration changed. Restarting development servers');
-    nodeServer.dispose().then(() => {
-      Object.keys(require.cache).forEach((modulePath) => {
-        if (modulePath.indexOf('tools') !== -1) {
-          delete require.cache[modulePath];
-        }
-      });
+    clientServer.dispose().then(() => {
+      HotClientServer = require('./HotClientServer').default;
+      clientServer = new HotClientServer();
 
-      HotNodeServer = require('./HotNodeServer').default;
-      nodeServer = new HotNodeServer();
+      nodeServer.dispose().then(() => {
+        Object.keys(require.cache).forEach((modulePath) => {
+          if (modulePath.indexOf('tools') !== -1) {
+            delete require.cache[modulePath];
+          }
+        });
+
+        HotNodeServer = require('./HotNodeServer').default;
+        nodeServer = new HotNodeServer();
+      })
     })
   })
 })
