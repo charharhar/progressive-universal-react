@@ -7,7 +7,7 @@ import {
   JS_LOADER,
   JSON_LOADER,
   CSS_LOADER_OPTIONS,
-} from './webpack.common.babel.js';
+} from './webpack.common';
 
 const server = {
   target: 'node',
@@ -45,7 +45,9 @@ const server = {
         }
       }
     ]
-  }
+  },
+
+  plugins: [],
 }
 
 export default server;

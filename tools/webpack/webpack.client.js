@@ -6,13 +6,14 @@ import {
   JS_LOADER,
   JSON_LOADER,
   CSS_LOADER_OPTIONS,
-} from './webpack.common.babel.js';
+} from './webpack.common';
 
 const client = {
   target: 'web',
 
   entry: {
     main: [
+      'react-hot-loader/patch',
       './client/index.js',
     ],
     vendor: [
@@ -25,7 +26,7 @@ const client = {
     path: path.resolve(appRootDir.get(), 'build/client'),
     filename: '[name].js',
     chunkFilename: '[name]-[chunkhash].js',
-    publicPath: '/static/',
+    publicPath: `http://localhost:7000/client`,
   },
 
   resolve: {
@@ -51,6 +52,8 @@ const client = {
       name: 'vendor',
     }),
     new webpack.NoEmitOnErrorsPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.NamedModulesPlugin()
   ]
 };
 

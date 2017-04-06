@@ -1,7 +1,7 @@
 import path from 'path';
 import appRootDir from 'app-root-dir';
 import webpack from 'webpack';
-import serverConfig from '../../webpack/webpack.server.babel.js';
+import serverConfig from '../../webpack/webpack.server';
 
 import { spawn } from 'child_process';
 

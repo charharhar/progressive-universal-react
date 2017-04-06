@@ -3,7 +3,9 @@ import path from 'path';
 import appRootDir from 'app-root-dir';
 
 let HotNodeServer = require('./HotNodeServer').default;
-let devServer = new HotNodeServer();
+let nodeServer = new HotNodeServer();
+let HotClientServer = require('./HotClientServer').default;
+let clientServer = new HotClientServer();
 
 const watcher = chokidar.watch([
   path.resolve(appRootDir.get(), 'tools')
@@ -11,9 +13,8 @@ const watcher = chokidar.watch([
 
 watcher.on('ready', () => {
   watcher.on('change', () => {
-    console.log('Build configuration changed. Restarting devServer');
-    devServer.dispose().then(() => {
-
+    console.log('Build configuration changed. Restarting development servers');
+    nodeServer.dispose().then(() => {
       Object.keys(require.cache).forEach((modulePath) => {
         if (modulePath.indexOf('tools') !== -1) {
           delete require.cache[modulePath];
@@ -21,7 +22,7 @@ watcher.on('ready', () => {
       });
 
       HotNodeServer = require('./HotNodeServer').default;
-      devServer = new HotNodeServer();
+      nodeServer = new HotNodeServer();
     })
   })
 })

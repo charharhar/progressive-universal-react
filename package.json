@@ -32,10 +32,11 @@
     "webpack-dev-middleware": "^1.10.1",
     "webpack-hot-middleware": "^2.17.1",
     "webpack-md5-hash": "^0.0.5",
-    "webpack-node-externals": "^1.5.4"
+    "webpack-node-externals": "^1.5.4",
+    "write-file-webpack-plugin": "^4.0.0"
   },
   "scripts": {
     "build": "webpack --progress --config tools/webpack/webpack.client.babel.js",
-    "development": "babel-node tools/scripts/development/index"
+    "development": "rimraf build && babel-node tools/scripts/development"
   }
 }

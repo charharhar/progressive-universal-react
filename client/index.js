@@ -1,16 +1,27 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 
+import App from '../shared/App';
+
+const IS_PROD = process.env.NODE_ENV === 'production';
 const rootEl = document.querySelector('#app');
 
-class App extends Component{
-  render() {
-    return (
-      <div>
-        Hello
-      </div>
-    )
-  }
-}
+const ReactHotLoader =
+  IS_PROD
+  ? ({ children }) => React.Children.only(children)
+  : require('react-hot-loader').AppContainer;
 
-render(<App />, rootEl);
+const renderApp = AppComponent =>
+  <ReactHotLoader>
+    <AppComponent />
+  </ReactHotLoader>
+
+render(renderApp(App), rootEl);
+
+if (!IS_PROD && module.hot) {
+  // flow-disable-next-line
+  module.hot.accept('../shared/App', () => {
+    const nextApp = require('../shared/App').default;
+    render(renderApp(nextApp), rootEl);
+  });
+}
