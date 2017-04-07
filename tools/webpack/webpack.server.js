@@ -2,6 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 import appRootDir from 'app-root-dir';
 import nodeExternals from 'webpack-node-externals';
+import config from '../config';
 
 import {
   JS_LOADER,
@@ -19,7 +20,7 @@ const server = {
   },
 
   output: {
-    path: path.resolve(appRootDir.get(), 'build/server'),
+    path: path.resolve(appRootDir.get(), config.serverOutputPath),
     filename: '[name].js',
     libraryTarget: 'commonjs2',
   },

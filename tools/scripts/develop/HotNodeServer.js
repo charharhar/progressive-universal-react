@@ -1,6 +1,7 @@
 import path from 'path';
 import appRootDir from 'app-root-dir';
 import { spawn } from 'child_process';
+import { log } from '../../utils'
 
 class HotNodeServer {
   constructor(nodeCompiler) {
@@ -14,15 +15,28 @@ class HotNodeServer {
       if (this.server) {
         this.server.kill();
         this.server = null;
-        console.log('Restarting server');
+        log({
+          title: 'Node Server',
+          message: 'Restarting node server',
+          type: 'warn',
+        })
       }
 
       const newServer = spawn('node', [compiledEntryFile]);
-      console.log('Server running with latest changes');
+      log({
+          title: 'Node Server',
+          message: 'Running with latest node bundle',
+          notify: true,
+        })
 
       newServer.stdout.on('data', data => console.log(data.toString().trim()));
       newServer.stderr.on('data', (data) => {
-        console.log('Error in server execution, check the console for more info.');
+        log({
+          title: 'Node Server',
+          message: 'Error in server execution, check the console for more info.',
+          notify: true,
+          type: 'error',
+        })
         console.error(data.toString().trim());
       });
 
@@ -30,7 +44,11 @@ class HotNodeServer {
     }
 
     nodeCompiler.plugin('compile', () => {
-      console.log('Building new server bundle');
+      log({
+        title: 'Node Server',
+        message: 'Building new node bundle',
+        type: 'warn',
+      })
     })
 
     nodeCompiler.plugin('done', stats => {

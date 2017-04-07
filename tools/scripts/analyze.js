@@ -5,7 +5,7 @@ import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import clientConfig from '../webpack/webpack.client';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import chalk from 'chalk';
+import { log } from '../utils'
 
 clientConfig.plugins.push(
   new BundleAnalyzerPlugin({
@@ -30,6 +30,9 @@ compiler.run((err, stats) => {
   if (err) {
     console.error(err);
   } else {
-    console.log(chalk.bgYellow.black(`==> Running Webpack Bundle Analyzer`))
+    log({
+      title: 'Analyzer',
+      message: 'Running Webpack Bundle Analyzer',
+    })
   }
 })

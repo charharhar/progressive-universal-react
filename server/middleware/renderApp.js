@@ -5,6 +5,7 @@ import React from 'react';
 import appRootDir from 'app-root-dir';
 import { StaticRouter } from 'react-router';
 import { renderToString } from 'react-dom/server';
+import config from '../../tools/config';
 
 import App from '../../shared/App';
 
@@ -34,8 +35,8 @@ const renderApp = (req, res) => {
         </head>
         <body>
           <div id="app">${appHtml}</div>
-          <script src="http://localhost:7000/client/vendor.js"></script>
-          <script src="http://localhost:7000/client/main.js"></script>
+          <script src="http://${config.host}:${config.clientPort}/client/vendor.js"></script>
+          <script src="http://${config.host}:${config.clientPort}/client/main.js"></script>
         </body>
       </html>
     `);

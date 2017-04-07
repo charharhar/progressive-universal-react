@@ -3,6 +3,8 @@ import express from 'express';
 import appRootDir from 'app-root-dir';
 import createWebpackDevMiddleware from 'webpack-dev-middleware';
 import createWebpackHotMiddleware from 'webpack-hot-middleware';
+import config from '../../config';
+import { log } from '../../utils';
 
 class ListenerManager {
   constructor(listener) {
@@ -36,10 +38,12 @@ class ListenerManager {
       if (this.listener) {
         this.killAllConnections();
 
-        console.log('Destroyed all existing connections.');
-
         this.listener.close(() => {
-          console.log('Closed listener.')
+          log({
+            title: 'Client Server',
+            message: 'Restarting client server',
+            type: 'warn',
+          })
 
           resolve();
         });
@@ -64,19 +68,27 @@ class HotClientServer {
     app.use(this.webpackDevMiddleware);
     app.use(this.webpackHotMiddleware);
 
-    const listener = app.listen(7000, 'localhost');
+    const listener = app.listen(config.clientPort, config.host);
 
     this.listenerManager = new ListenerManager(listener);
 
     clientCompiler.plugin('compile', () => {
-      console.log('Building new client bundle')
+      log({
+        title: 'Client Server',
+        message: 'Building new client bundle',
+        type: 'warn',
+      })
     })
 
     clientCompiler.plugin('done', stats => {
       if (stats.hasErrors()) {
         console.error(stats.toString());
       } else {
-        console.log('Running with latest client bundle');
+        log({
+          title: 'Client Server',
+          message: 'Running with latest client bundle',
+          notify: true,
+        })
       }
     })
   }

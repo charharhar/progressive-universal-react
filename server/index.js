@@ -1,12 +1,13 @@
 import path from 'path';
 import express from 'express';
 import appRootDir from 'app-root-dir';
+import config from '../tools/config';
 
 import App from '../shared/App';
 import renderApp from './middleware/renderApp';
 
 const app = express();
-const PORT = 3000;
+const PORT = config.serverPort;
 
 app.use('/static', express.static('build'));
 app.use(renderApp);

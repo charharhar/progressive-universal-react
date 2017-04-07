@@ -1,3 +1,7 @@
 :local .classname {
   color: red;
 }
+
+:local .classname:hover {
+  color: pink;
+}

@@ -1,6 +1,7 @@
 import path from 'path';
 import webpack from 'webpack';
 import appRootDir from 'app-root-dir';
+import config from '../config';
 
 import {
   JS_LOADER,
@@ -14,7 +15,7 @@ const client = {
   entry: {
     main: [
       'react-hot-loader/patch',
-      `webpack-hot-middleware/client?reload=true&path=http://localhost:7000/__webpack_hmr`,
+      `webpack-hot-middleware/client?reload=true&path=http://${config.host}:${config.clientPort}/__webpack_hmr`,
       './client/index.js',
     ],
     vendor: [
@@ -26,10 +27,15 @@ const client = {
   },
 
   output: {
-    path: path.resolve(appRootDir.get(), 'build/client'),
+    path: path.resolve(appRootDir.get(), config.clientOutputPath),
     filename: '[name].js',
     chunkFilename: '[name]-[chunkhash].js',
-    publicPath: `http://localhost:7000/client`,
+    publicPath: `http://${config.host}:${config.clientPort}/client`,
+  },
+
+  node: {
+    __filename: true,
+    __dirname: true,
   },
 
   resolve: {
