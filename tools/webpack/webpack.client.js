@@ -42,10 +42,15 @@ const client = {
       JSON_LOADER,
       {
         test: /\.css$/,
-        use: {
-          loader: 'css-loader',
-          options: CSS_LOADER_OPTIONS,
-        }
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: CSS_LOADER_OPTIONS,
+          },
+        ]
       },
     ],
   },
