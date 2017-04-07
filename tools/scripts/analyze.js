@@ -30,6 +30,6 @@ compiler.run((err, stats) => {
   if (err) {
     console.error(err);
   } else {
-    console.log(chalk.bgYellow.black(`==> Running Webpack Bundle Analyzer.`))
+    console.log(chalk.bgYellow.black(`==> Running Webpack Bundle Analyzer`))
   }
 })

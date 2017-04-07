@@ -1,5 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
+import { BrowserRouter } from 'react-router-dom';
 
 import App from '../shared/App';
 
@@ -13,7 +14,9 @@ const ReactHotLoader =
 
 const renderApp = AppComponent =>
   <ReactHotLoader>
-    <AppComponent />
+    <BrowserRouter>
+      <AppComponent />
+    </BrowserRouter>
   </ReactHotLoader>
 
 render(renderApp(App), rootEl);

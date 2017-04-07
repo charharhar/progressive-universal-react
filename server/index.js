@@ -9,10 +9,7 @@ const app = express();
 const PORT = 3000;
 
 app.use('/static', express.static('build'));
-
-app.get('*', (req, res) => {
-  res.send(renderApp());
-});
+app.use(renderApp);
 
 const server = app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)

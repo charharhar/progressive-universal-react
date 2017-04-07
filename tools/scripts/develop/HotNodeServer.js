@@ -1,18 +1,13 @@
 import path from 'path';
 import appRootDir from 'app-root-dir';
-import webpack from 'webpack';
-import serverConfig from '../../webpack/webpack.server';
-
 import { spawn } from 'child_process';
 
 class HotNodeServer {
-  constructor() {
-    const compiler = webpack(serverConfig);
-
+  constructor(nodeCompiler) {
     const compiledEntryFile = path.resolve(
       appRootDir.get(),
-      compiler.options.output.path,
-      `${Object.keys(compiler.options.entry)[0]}.js`
+      nodeCompiler.options.output.path,
+      `${Object.keys(nodeCompiler.options.entry)[0]}.js`
     )
 
     const startServer = () => {
@@ -34,15 +29,15 @@ class HotNodeServer {
       this.server = newServer;
     }
 
-    compiler.plugin('compile', () => {
+    nodeCompiler.plugin('compile', () => {
       console.log('Building new server bundle');
     })
 
-    compiler.plugin('done', stats => {
+    nodeCompiler.plugin('done', stats => {
       startServer();
     })
 
-    this.bundleWatcher = compiler.watch(null, () => undefined);
+    this.bundleWatcher = nodeCompiler.watch(null, () => undefined);
   }
 
   dispose() {

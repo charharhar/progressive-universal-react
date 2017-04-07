@@ -14,6 +14,7 @@ const client = {
   entry: {
     main: [
       'react-hot-loader/patch',
+      `webpack-hot-middleware/client?reload=true&path=http://localhost:7000/__webpack_hmr`,
       './client/index.js',
     ],
     vendor: [
@@ -55,7 +56,7 @@ const client = {
     }),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin()
+    new webpack.NamedModulesPlugin(),
   ]
 };
 

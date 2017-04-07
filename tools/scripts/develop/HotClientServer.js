@@ -1,11 +1,8 @@
 import path from 'path';
 import express from 'express';
-import webpack from 'webpack';
 import appRootDir from 'app-root-dir';
 import createWebpackDevMiddleware from 'webpack-dev-middleware';
 import createWebpackHotMiddleware from 'webpack-hot-middleware';
-
-import clientConfig from '../../webpack/webpack.client';
 
 class ListenerManager {
   constructor(listener) {
@@ -54,16 +51,15 @@ class ListenerManager {
 }
 
 class HotClientServer {
-  constructor() {
-    const compiler = webpack(clientConfig);
+  constructor(clientCompiler) {
     const app = express();
 
-    this.webpackDevMiddleware = createWebpackDevMiddleware(compiler, {
+    this.webpackDevMiddleware = createWebpackDevMiddleware(clientCompiler, {
       quiet: true,
       noInfo: true,
-      publicPath: compiler.options.output.publicPath,
+      publicPath: clientCompiler.options.output.publicPath,
     })
-    this.webpackHotMiddleware = createWebpackHotMiddleware(compiler);
+    this.webpackHotMiddleware = createWebpackHotMiddleware(clientCompiler);
 
     app.use(this.webpackDevMiddleware);
     app.use(this.webpackHotMiddleware);
@@ -72,11 +68,11 @@ class HotClientServer {
 
     this.listenerManager = new ListenerManager(listener);
 
-    compiler.plugin('compile', () => {
+    clientCompiler.plugin('compile', () => {
       console.log('Building new client bundle')
     })
 
-    compiler.plugin('done', stats => {
+    clientCompiler.plugin('done', stats => {
       if (stats.hasErrors()) {
         console.error(stats.toString());
       } else {

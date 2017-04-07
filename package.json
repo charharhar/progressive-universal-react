@@ -37,8 +37,7 @@
     "write-file-webpack-plugin": "^4.0.0"
   },
   "scripts": {
-    "build": "webpack --progress --config tools/webpack/webpack.client.babel.js",
-    "development": "rimraf build && babel-node tools/scripts/development",
+    "develop": "rimraf build && babel-node tools/scripts/develop",
     "analyze": "babel-node tools/scripts/analyze"
   }
 }
