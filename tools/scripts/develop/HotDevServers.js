@@ -1,8 +1,7 @@
 import webpack from 'webpack';
 import HotNodeServer from './HotNodeServer';
 import HotClientServer from './HotClientServer';
-import clientConfig from '../../webpack/webpack.client';
-import serverConfig from '../../webpack/webpack.server';
+import configFactory from '../../webpack/webpack.config';
 
 class HotDevServers {
   constructor() {
@@ -11,8 +10,8 @@ class HotDevServers {
 
     Promise
       .resolve([
-        webpack(clientConfig),
-        webpack(serverConfig)
+        webpack(configFactory({ target: 'client', mode: 'development' })),
+        webpack(configFactory({ target: 'server', mode: 'development' }))
       ])
       // Then start the node development server(s).
       .then((resolve) => {
