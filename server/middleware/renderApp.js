@@ -10,12 +10,22 @@ import config from '../../tools/config';
 import App from '../../shared/App';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
+const { host, clientPort, staticPath } = config;
+
+const assetsFilePath = path.resolve(
+  appRootDir.get(),
+  './build/client/assets.json',
+);
+
+const readAssetsJSONFile = () =>
+  JSON.parse(fs.readFileSync(assetsFilePath, 'utf8'));
 
 const renderScript = filename =>
-  `<script src="${IS_PROD ? `/static/client/` : `http://${config.host}:${config.clientPort}/client/`}${filename}"></script>`;
+  `<script src="${IS_PROD ? `${staticPath}/client/` : ''}${filename}"></script>`;
 
 const renderApp = (req, res) => {
   const context = {}
+  const assetsMap = readAssetsJSONFile();
   const appHtml = renderToString(
     <StaticRouter location={req.url} context={context}>
       <App />
@@ -38,8 +48,8 @@ const renderApp = (req, res) => {
         </head>
         <body>
           <div id="app">${appHtml}</div>
-          ${IS_PROD ? '' : '<script src="/static/client/vendorDll.js"></script>'}
-          ${renderScript('index.js')}
+          ${IS_PROD ? '' : `<script src="${staticPath}/client/vendorDll.js"></script>`}
+          ${renderScript(assetsMap.index.js)}
         </body>
       </html>
     `);

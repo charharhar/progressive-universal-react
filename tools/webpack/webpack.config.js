@@ -3,6 +3,9 @@ import chalk from 'chalk';
 import webpack from 'webpack';
 import appRootDir from 'app-root-dir';
 import nodeExternals from 'webpack-node-externals';
+import AssetsPlugin from 'assets-webpack-plugin';
+import WebpackMd5Hash from 'webpack-md5-hash';
+
 import config from '../config';
 import { ifElse, removeEmpty } from '../utils';
 
@@ -52,9 +55,9 @@ export default function configFactory(options) {
         path.resolve(appRootDir.get(), config.clientOutputPath),
         path.resolve(appRootDir.get(), config.serverOutputPath)
       ),
-      filename: '[name].js',
+      filename: ifProdClient('[name]-[chunkhash].js', '[name].js'),
       chunkFilename: '[name]-[chunkhash].js',
-      publicPath: ifDev(`http://${config.host}:${config.clientPort}/client`),
+      publicPath: ifDev(`http://${config.host}:${config.clientPort}/client/`),
       libraryTarget: ifNode('commonjs2', 'var'),
     },
 
@@ -105,6 +108,15 @@ export default function configFactory(options) {
       }),
       // No errors during development to prevent crashing
       ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
+      // [chunkhash] only change when content has change, for long term browser caching
+      ifClient(() => new WebpackMd5Hash()),
+      // Generates JSON file mapping all output files
+      ifClient(() =>
+        new AssetsPlugin({
+          filename: 'assets.json',
+          path: path.resolve(appRootDir.get(), config.clientOutputPath),
+        }),
+      ),
       // Enable hot module replacement plugin
       ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
       // Prints more readable module names in the browser console on HMR updates

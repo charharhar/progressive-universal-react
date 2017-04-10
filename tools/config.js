@@ -7,6 +7,8 @@ const config = {
 
   serverPort: 3000,
 
+  staticPath: '/static',
+
   clientOutputPath: './build/client',
 
   serverOutputPath: './build/server',
