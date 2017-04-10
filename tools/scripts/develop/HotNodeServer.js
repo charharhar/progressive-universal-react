@@ -4,7 +4,7 @@ import { spawn } from 'child_process';
 import { log } from '../../utils'
 
 class HotNodeServer {
-  constructor(nodeCompiler) {
+  constructor(clientCompiler, nodeCompiler) {
     const compiledEntryFile = path.resolve(
       appRootDir.get(),
       nodeCompiler.options.output.path,

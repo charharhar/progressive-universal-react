@@ -29,7 +29,7 @@ class HotDevServers {
       .then((clientCompiler) => {
         const serverConfig = Object.assign(configObject, { target: 'server' });
         const serverCompiler = webpack(configFactory(serverConfig));
-        this.hotNodeServer = new HotNodeServer(serverCompiler)
+        this.hotNodeServer = new HotNodeServer(clientCompiler, serverCompiler)
       });
   }
 

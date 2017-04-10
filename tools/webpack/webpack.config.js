@@ -109,9 +109,14 @@ export default function configFactory(options) {
       ifDevClient(() => new webpack.NamedModulesPlugin()),
       // No errors during development to prevent crashing
       ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
-      ifDev(() => new webpack.DllReferencePlugin({
-        context: process.cwd(),
-        manifest: path.resolve(appRootDir.get(), config.clientOutputPath, './vendorDll.json'),
+      ifDevClient(() => new webpack.DllReferencePlugin({
+        manifest: require(
+          path.resolve(
+            appRootDir.get(),
+            config.clientOutputPath,
+            './vendorDll.json',
+          )
+        ),
       })),
       // Minify JS plugin
       ifProdClient(() => new webpack.optimize.UglifyJsPlugin({
