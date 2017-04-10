@@ -1,5 +1,5 @@
-import chokidar from 'chokidar';
 import path from 'path';
+import chokidar from 'chokidar';
 import appRootDir from 'app-root-dir';
 import { log } from '../../utils';
 
@@ -12,10 +12,10 @@ const watcher = chokidar.watch([
 
 watcher.on('ready', () => {
   watcher.on('change', () => {
-    console.log('-------------------')
+    console.log('------------------------------------- BUILD CONFIGURATION CHANGED -------------------------------------');
     log({
-      title: 'Hot Servers',
-      message: 'Build configuration changed. Restarting development servers',
+      title: 'Development Servers',
+      message: 'Restarting development servers',
       notify: true,
     })
     devServer.dispose().then(() => {

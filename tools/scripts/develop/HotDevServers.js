@@ -21,15 +21,15 @@ class HotDevServers {
         const clientCompiler = webpack(configFactory(clientConfig));
         clientCompiler.plugin('done', stats => {
           if (!stats.hasErrors()) {
-            resolve(clientCompiler);
+            resolve();
           }
         })
         this.hotClientServer = new HotClientServer(clientCompiler);
       }))
-      .then((clientCompiler) => {
+      .then(() => {
         const serverConfig = Object.assign(configObject, { target: 'server' });
         const serverCompiler = webpack(configFactory(serverConfig));
-        this.hotNodeServer = new HotNodeServer(clientCompiler, serverCompiler)
+        this.hotNodeServer = new HotNodeServer(serverCompiler)
       });
   }
 

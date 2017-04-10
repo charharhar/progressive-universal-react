@@ -93,7 +93,7 @@ function createVendorDLL() {
         log({
           title: 'vendorDLL',
           level: 'warn',
-          message: `New client vendor dependencies detected. Regenerating the vendor dll...`,
+          message: `New client vendor dependencies detected. Regenerating the vendor dll.`,
         });
         buildVendorDLL().then(resolve).catch(reject);
       } else {

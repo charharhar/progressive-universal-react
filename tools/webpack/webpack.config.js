@@ -109,6 +109,7 @@ export default function configFactory(options) {
       ifDevClient(() => new webpack.NamedModulesPlugin()),
       // No errors during development to prevent crashing
       ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
+      // Vendor dll reference to the manifest file to improve development rebuilding speeds
       ifDevClient(() => new webpack.DllReferencePlugin({
         manifest: require(
           path.resolve(

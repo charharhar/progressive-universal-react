@@ -6,7 +6,7 @@ import appRootDir from 'app-root-dir';
 export function log (options) {
   const title = `${options.title.toUpperCase()}`;
   const type = options.type;
-  const msg = `==> ${title} -> ${options.message}`;
+  const msg = `==> ${chalk.bold(title)} -> ${options.message}`;
 
   if (options.notify) {
     notifier.notify({
