@@ -11,6 +11,9 @@ import App from '../../shared/App';
 
 const IS_PROD = process.env.NODE_ENV === 'production';
 
+const renderScript = filename =>
+  `<script src="${IS_PROD ? `/static/client/` : `http://${config.host}:${config.clientPort}/client/`}${filename}"></script>`;
+
 const renderApp = (req, res) => {
   const context = {}
   const appHtml = renderToString(
@@ -35,8 +38,8 @@ const renderApp = (req, res) => {
         </head>
         <body>
           <div id="app">${appHtml}</div>
-          <script src="/static/client/vendorDll.js"></script>
-          <script src="http://${config.host}:${config.clientPort}/client/main.js"></script>
+          ${IS_PROD ? '' : '<script src="/static/client/vendorDll.js"></script>'}
+          ${renderScript('index.js')}
         </body>
       </html>
     `);

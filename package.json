@@ -38,6 +38,8 @@
   },
   "scripts": {
     "develop": "rimraf build && babel-node tools/scripts/develop",
-    "analyze": "babel-node tools/scripts/analyze"
+    "build": "rimraf build && babel-node tools/scripts/build",
+    "analyze": "babel-node tools/scripts/analyze",
+    "start": "node build/server"
   }
 }

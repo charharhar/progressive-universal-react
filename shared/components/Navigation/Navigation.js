@@ -16,10 +16,7 @@ const Navigation = () => (
             <NavLink
               exact
               to={link.route}
-              activeStyle={{
-                color: 'limegreen',
-                fontWeight: 'bold',
-              }}
+              activeClassName={styles.activeLink}
               >
               {link.label}
             </NavLink>

@@ -37,7 +37,7 @@ export default function configFactory(options) {
     devtool: isProd ? 'hidden-source-map' : 'source-map',
 
     entry: {
-      main: removeEmpty([
+      index: removeEmpty([
         ifDevClient('react-hot-loader/patch'),
         ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://${config.host}:${config.clientPort}/__webpack_hmr`),
         ifClient(
@@ -84,8 +84,8 @@ export default function configFactory(options) {
                 localIdentName: '[name]__[local]___[hash:base64:5]',
               },
             }),
-            ifDevClient({ loader: 'style-loader' }),
-            ifDevClient({
+            ifClient({ loader: 'style-loader' }),
+            ifClient({
               loader: 'css-loader',
               options: {
                 modules: true,
@@ -103,12 +103,12 @@ export default function configFactory(options) {
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(mode),
       }),
+      // No errors during development to prevent crashing
+      ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
       // Enable hot module replacement plugin
       ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
       // Prints more readable module names in the browser console on HMR updates
       ifDevClient(() => new webpack.NamedModulesPlugin()),
-      // No errors during development to prevent crashing
-      ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
       // Vendor dll reference to the manifest file to improve development rebuilding speeds
       ifDevClient(() => new webpack.DllReferencePlugin({
         manifest: require(

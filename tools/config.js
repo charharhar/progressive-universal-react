@@ -11,6 +11,14 @@ const config = {
 
   serverOutputPath: './build/server',
 
+  configDevelop: { mode: 'development' },
+
+  configProduction: { mode: 'production' },
+
+  targetClient: { target: 'client' },
+
+  targetServer: { target: 'server' },
+
 }
 
 export default config;

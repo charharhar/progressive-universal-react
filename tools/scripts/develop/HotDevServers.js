@@ -3,11 +3,10 @@ import HotNodeServer from './HotNodeServer';
 import HotClientServer from './HotClientServer';
 import configFactory from '../../webpack/webpack.config';
 import buildVendorDll from '../../webpack/vendordll.config';
+import { createConfigObject } from '../../utils';
+import config from '../../config';
 
-const configObject = {
-  target: 'none',
-  mode: 'development',
-};
+const { configDevelop, targetClient, targetServer } = config;
 
 class HotDevServers {
   constructor() {
@@ -17,7 +16,7 @@ class HotDevServers {
     Promise
       .resolve(buildVendorDll())
       .then(() => new Promise(resolve => {
-        const clientConfig = Object.assign(configObject, { target: 'client' });
+        const clientConfig = createConfigObject(configDevelop, targetClient);
         const clientCompiler = webpack(configFactory(clientConfig));
         clientCompiler.plugin('done', stats => {
           if (!stats.hasErrors()) {
@@ -27,7 +26,7 @@ class HotDevServers {
         this.hotClientServer = new HotClientServer(clientCompiler);
       }))
       .then(() => {
-        const serverConfig = Object.assign(configObject, { target: 'server' });
+        const serverConfig = createConfigObject(configDevelop, targetServer);
         const serverCompiler = webpack(configFactory(serverConfig));
         this.hotNodeServer = new HotNodeServer(serverCompiler)
       });
