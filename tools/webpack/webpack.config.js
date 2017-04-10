@@ -2,6 +2,7 @@ import path from 'path';
 import chalk from 'chalk';
 import webpack from 'webpack';
 import appRootDir from 'app-root-dir';
+import HappyPack from 'happypack';
 import nodeExternals from 'webpack-node-externals';
 import AssetsPlugin from 'assets-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
@@ -11,8 +12,15 @@ import config from '../config';
 import { ifElse, removeEmpty } from '../utils';
 
 export default function configFactory(options) {
-  const { target, mode } = options;
   console.log(chalk.blue(`==> Creating webpack config for ${target} in ${mode} mode.`));
+
+  const { target, mode } = options;
+  const {
+    clientOutputPath,
+    serverOutputPath,
+    host,
+    clientPort
+  } = config;
 
   const isDev = mode === 'development';
   const isProd = mode === 'production';
@@ -43,7 +51,7 @@ export default function configFactory(options) {
     entry: {
       index: removeEmpty([
         ifDevClient('react-hot-loader/patch'),
-        ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://${config.host}:${config.clientPort}/__webpack_hmr`),
+        ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://${host}:${clientPort}/__webpack_hmr`),
         ifClient(
           path.resolve(appRootDir.get(), './client/index'),
           path.resolve(appRootDir.get(), './server/index')
@@ -53,12 +61,12 @@ export default function configFactory(options) {
 
     output: {
       path: ifClient(
-        path.resolve(appRootDir.get(), config.clientOutputPath),
-        path.resolve(appRootDir.get(), config.serverOutputPath)
+        path.resolve(appRootDir.get(), clientOutputPath),
+        path.resolve(appRootDir.get(), serverOutputPath)
       ),
       filename: ifProdClient('[name]-[chunkhash].js', '[name].js'),
       chunkFilename: '[name]-[chunkhash].js',
-      publicPath: ifDev(`http://${config.host}:${config.clientPort}/client/`),
+      publicPath: ifDev(`http://${host}:${clientPort}/client/`),
       libraryTarget: ifNode('commonjs2', 'var'),
     },
 
@@ -66,12 +74,75 @@ export default function configFactory(options) {
       extensions: ['.js'],
     },
 
+    plugins: removeEmpty([
+      // Define some process variables
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(mode),
+      }),
+      // No errors during development to prevent crashing
+      ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
+      // [chunkhash] only change when content has change, for long term browser caching
+      ifClient(() => new WebpackMd5Hash()),
+      // Generates JSON file mapping all output files
+      ifClient(() =>
+        new AssetsPlugin({
+          filename: 'assets.json',
+          path: path.resolve(appRootDir.get(), clientOutputPath),
+        }),
+      ),
+      // Enable hot module replacement plugin
+      ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
+      // Prints more readable module names in the browser console on HMR updates
+      ifDevClient(() => new webpack.NamedModulesPlugin()),
+      // Vendor dll reference to the manifest file to improve development rebuilding speeds
+      ifDevClient(() => new webpack.DllReferencePlugin({
+        manifest: require(
+          path.resolve(
+            appRootDir.get(),
+            clientOutputPath,
+            './vendorDll.json',
+          )
+        ),
+      })),
+      // Extract CSS into CSS files for production build
+      ifProdClient(() => new ExtractTextPlugin({
+        filename: '[name]-[chunkhash].css',
+        allChunks: true,
+      })),
+      // Minify JS for production build
+      ifProdClient(() => new webpack.optimize.UglifyJsPlugin({
+        sourceMap: true,
+        compress: {
+          screw_ie8: true,
+          warnings: false,
+        },
+        mangle: {
+          screw_ie8: true,
+        },
+        output: {
+          comments: false,
+          screw_ie8: true,
+        },
+      })),
+      // HappyPack Loaders implemented
+      // Set up HappyPack JS loaders for both client/server bundles
+      // Went from ~4000ms to ~1700ms
+      new HappyPack({
+        id: 'happypack-javascript',
+        verbose: false,
+        threads: 4,
+        loaders: [{
+          path: 'babel-loader',
+        }]
+      }),
+    ]),
+
     module: {
       rules: [
         {
           test: /\.js$/,
           exclude: '/node_modules/',
-          loader: 'babel-loader',
+          loader: 'happypack/loader?id=happypack-javascript',
         },
         {
           test: /\.json$/,
@@ -123,58 +194,7 @@ export default function configFactory(options) {
       ]
     },
 
-    plugins: removeEmpty([
-      // Define some process variables
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(mode),
-      }),
-      // No errors during development to prevent crashing
-      ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
-      // [chunkhash] only change when content has change, for long term browser caching
-      ifClient(() => new WebpackMd5Hash()),
-      // Generates JSON file mapping all output files
-      ifClient(() =>
-        new AssetsPlugin({
-          filename: 'assets.json',
-          path: path.resolve(appRootDir.get(), config.clientOutputPath),
-        }),
-      ),
-      // Enable hot module replacement plugin
-      ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
-      // Prints more readable module names in the browser console on HMR updates
-      ifDevClient(() => new webpack.NamedModulesPlugin()),
-      // Vendor dll reference to the manifest file to improve development rebuilding speeds
-      ifDevClient(() => new webpack.DllReferencePlugin({
-        manifest: require(
-          path.resolve(
-            appRootDir.get(),
-            config.clientOutputPath,
-            './vendorDll.json',
-          )
-        ),
-      })),
-      // Extract CSS into CSS files for production build
-      ifProdClient(() => new ExtractTextPlugin({
-        filename: '[name]-[chunkhash].css',
-        allChunks: true,
-      })),
-      // Minify JS for production build
-      ifProdClient(() => new webpack.optimize.UglifyJsPlugin({
-        sourceMap: true,
-        compress: {
-          screw_ie8: true,
-          warnings: false,
-        },
-        mangle: {
-          screw_ie8: true,
-        },
-        output: {
-          comments: false,
-          screw_ie8: true,
-        },
-      })),
-    ]),
-  }
+  };
 
   return webpackConfig;
 }
