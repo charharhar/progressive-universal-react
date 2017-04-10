@@ -2,6 +2,12 @@ import webpack from 'webpack';
 import HotNodeServer from './HotNodeServer';
 import HotClientServer from './HotClientServer';
 import configFactory from '../../webpack/webpack.config';
+import buildVendorDll from '../../webpack/vendordll.config';
+
+const configObject = {
+  target: 'none',
+  mode: 'development',
+};
 
 class HotDevServers {
   constructor() {
@@ -9,17 +15,21 @@ class HotDevServers {
     this.hotNodeServer = null;
 
     Promise
-      .resolve([
-        webpack(configFactory({ target: 'client', mode: 'development' })),
-        webpack(configFactory({ target: 'server', mode: 'development' }))
-      ])
-      // Then start the node development server(s).
-      .then((resolve) => {
-        this.hotClientServer = new HotClientServer(resolve[0]);
-        return resolve[1]
-      })
-      .then((resolve) => {
-        this.hotNodeServer = new HotNodeServer(resolve)
+      .resolve(buildVendorDll())
+      .then(() => new Promise(resolve => {
+        const clientConfig = Object.assign(configObject, { target: 'client' });
+        const clientCompiler = webpack(configFactory(clientConfig));
+        clientCompiler.plugin('done', stats => {
+          if (!stats.hasErrors()) {
+            resolve(clientCompiler);
+          }
+        })
+        this.hotClientServer = new HotClientServer(clientCompiler);
+      }))
+      .then((clientCompiler) => {
+        const serverConfig = Object.assign(configObject, { target: 'server' });
+        const serverCompiler = webpack(configFactory(serverConfig));
+        this.hotNodeServer = new HotNodeServer(serverCompiler)
       });
   }
 
@@ -30,9 +40,7 @@ class HotDevServers {
         : Promise.resolve()
     );
 
-    // First the hot client server.
     return safeDisposer(this.hotClientServer)
-      // Then dispose the hot node server(s).
       .then(() => safeDisposer(this.hotNodeServer));
   }
 }

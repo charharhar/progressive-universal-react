@@ -24,10 +24,10 @@ class HotNodeServer {
 
       const newServer = spawn('node', [compiledEntryFile]);
       log({
-          title: 'Node Server',
-          message: 'Running with latest node bundle',
-          notify: true,
-        })
+        title: 'Node Server',
+        message: 'Running with latest node bundle',
+        notify: true,
+      })
 
       newServer.stdout.on('data', data => console.log(data.toString().trim()));
       newServer.stderr.on('data', (data) => {

@@ -35,7 +35,7 @@ const renderApp = (req, res) => {
         </head>
         <body>
           <div id="app">${appHtml}</div>
-          <script src="http://${config.host}:${config.clientPort}/client/vendor.js"></script>
+          <script src="/static/client/vendorDll.js"></script>
           <script src="http://${config.host}:${config.clientPort}/client/main.js"></script>
         </body>
       </html>
