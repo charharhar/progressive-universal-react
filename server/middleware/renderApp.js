@@ -9,7 +9,7 @@ import config from '../../tools/config';
 
 import App from '../../shared/App';
 
-const IS_PROD = process.env.NODE_ENV === 'production';
+const isProd = process.env.NODE_ENV === 'production';
 const { host, clientPort, staticPath } = config;
 
 const assetsFilePath = path.resolve(
@@ -21,7 +21,10 @@ const readAssetsJSONFile = () =>
   JSON.parse(fs.readFileSync(assetsFilePath, 'utf8'));
 
 const renderScript = filename =>
-  `<script src="${IS_PROD ? `${staticPath}/client/` : ''}${filename}"></script>`;
+  `<script src="${isProd ? `${staticPath}/client/` : ''}${filename}"></script>`;
+
+const renderCSS = filename =>
+  `<link rel="stylesheet" type="text/css" href="${staticPath}/client/${filename}" />`
 
 const renderApp = (req, res) => {
   const context = {}
@@ -45,10 +48,11 @@ const renderApp = (req, res) => {
           <meta charset="utf-8" />
           <meta content="width=device-width, initial-scale=1" name="viewport" />
           <title>Universal React Starter</title>
+          ${isProd ? renderCSS(assetsMap.index.css) : ''}
         </head>
         <body>
           <div id="app">${appHtml}</div>
-          ${IS_PROD ? '' : `<script src="${staticPath}/client/vendorDll.js"></script>`}
+          ${isProd ? '' : `<script src="${staticPath}/client/vendorDll.js"></script>`}
           ${renderScript(assetsMap.index.js)}
         </body>
       </html>

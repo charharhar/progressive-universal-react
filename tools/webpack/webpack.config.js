@@ -5,6 +5,7 @@ import appRootDir from 'app-root-dir';
 import nodeExternals from 'webpack-node-externals';
 import AssetsPlugin from 'assets-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
+import ExtractTextPlugin from 'extract-text-webpack-plugin';
 
 import config from '../config';
 import { ifElse, removeEmpty } from '../utils';
@@ -70,15 +71,15 @@ export default function configFactory(options) {
         {
           test: /\.js$/,
           exclude: '/node_modules/',
-          use: 'babel-loader',
+          loader: 'babel-loader',
         },
         {
           test: /\.json$/,
-          use: 'json-loader',
+          loader: 'json-loader',
         },
         {
           test: /\.css$/,
-          use: removeEmpty([
+          rules: removeEmpty([
             ifNode({
               loader: 'css-loader/locals',
               options: {
@@ -87,8 +88,14 @@ export default function configFactory(options) {
                 localIdentName: '[name]__[local]___[hash:base64:5]',
               },
             }),
-            ifClient({ loader: 'style-loader' }),
-            ifClient({
+            ifProdClient({
+              loader: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: ['css-loader'],
+              })
+            }),
+            ifDevClient({ loader: 'style-loader' }),
+            ifDevClient({
               loader: 'css-loader',
               options: {
                 modules: true,
@@ -131,7 +138,12 @@ export default function configFactory(options) {
           )
         ),
       })),
-      // Minify JS plugin
+      // Extract CSS into CSS files for production build
+      ifProdClient(() => new ExtractTextPlugin({
+        filename: '[name]-[chunkhash].css',
+        allChunks: true,
+      })),
+      // Minify JS for production build
       ifProdClient(() => new webpack.optimize.UglifyJsPlugin({
         sourceMap: true,
         compress: {
