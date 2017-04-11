@@ -5,13 +5,15 @@ const config = {
 
   clientPort: 7000,
 
-  serverPort: 3000,
+  serverPort: `${process.env.ENABLE_TUNNEL === 'true' ? 1337 : 3000}`,
 
   staticPath: '/static',
 
-  clientOutputPath: './build/client',
+  buildPathName: `${process.env.ENABLE_TUNNEL === 'true' ? 'tunnel' : 'build'}`,
 
-  serverOutputPath: './build/server',
+  clientOutputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/client' : './build/client'}`,
+
+  serverOutputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/server' : './build/server'}`,
 
   configDevelop: { mode: 'development' },
 

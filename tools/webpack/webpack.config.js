@@ -11,10 +11,9 @@ import ExtractTextPlugin from 'extract-text-webpack-plugin';
 import config from '../config';
 import { ifElse, removeEmpty } from '../utils';
 
-export default function configFactory(options) {
+export default function configFactory({ target, mode }) {
   console.log(chalk.blue(`==> Creating webpack config for ${target} in ${mode} mode.`));
 
-  const { target, mode } = options;
   const {
     clientOutputPath,
     serverOutputPath,
@@ -78,6 +77,7 @@ export default function configFactory(options) {
       // Define some process variables
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(mode),
+        'process.env.ENABLE_TUNNEL': JSON.stringify(process.env.ENABLE_TUNNEL),
       }),
       // No errors during development to prevent crashing
       ifDev(() => new webpack.NoEmitOnErrorsPlugin()),

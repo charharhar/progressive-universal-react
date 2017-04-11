@@ -10,11 +10,12 @@ import config from '../../tools/config';
 import App from '../../shared/App';
 
 const isProd = process.env.NODE_ENV === 'production';
-const { host, clientPort, staticPath } = config;
+const { host, clientPort, staticPath, clientOutputPath } = config;
 
 const assetsFilePath = path.resolve(
   appRootDir.get(),
-  './build/client/assets.json',
+  clientOutputPath,
+  './assets.json',
 );
 
 const readAssetsJSONFile = () =>
