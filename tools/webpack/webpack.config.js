@@ -30,6 +30,7 @@ export default function configFactory({ target, mode }) {
   const ifProd = ifElse(isProd);
   const ifNode = ifElse(isNode);
   const ifClient = ifElse(isClient);
+  const ifDevNode = ifElse(isDev && isNode);
   const ifDevClient = ifElse(isDev && isClient);
   const ifProdClient = ifElse(isProd && isClient);
 
@@ -105,7 +106,7 @@ export default function configFactory({ target, mode }) {
         ),
       })),
       // Extract CSS into CSS files for production build
-      ifProdClient(() => new ExtractTextPlugin({
+      ifProd(() => new ExtractTextPlugin({
         filename: '[name]-[chunkhash].css',
         allChunks: true,
       })),
@@ -151,7 +152,7 @@ export default function configFactory({ target, mode }) {
         {
           test: /\.css$/,
           rules: removeEmpty([
-            ifNode({
+            ifDevNode({
               loader: 'css-loader/locals',
               options: {
                 modules: true,
@@ -159,7 +160,7 @@ export default function configFactory({ target, mode }) {
                 localIdentName: '[name]__[local]___[hash:base64:5]',
               },
             }),
-            ifProdClient({
+            ifProd({
               loader: ExtractTextPlugin.extract({
                 fallback: 'style-loader',
                 use: ['css-loader'],
