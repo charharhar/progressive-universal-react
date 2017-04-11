@@ -1,13 +1,16 @@
 
 import webpack from 'webpack';
-import fs from 'fs';
-import { resolve as pathResolve } from 'path';
-import appRootDir from 'app-root-dir';
-import clientConfig from '../webpack/webpack.client';
+import configFactory from '../webpack/webpack.config';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { log } from '../utils'
+import config from '../config';
 
-clientConfig.plugins.push(
+const { configProduction, targetClient, targetServer } = config;
+const targetBundle = process.argv.includes('--client') ? targetClient : targetServer;
+const configObject = Object.assign({}, configProduction, targetBundle);
+const webpackConfig = configFactory(configObject);
+
+webpackConfig.plugins.push(
   new BundleAnalyzerPlugin({
     analyzerMode: 'server',
     analyzerHost: '127.0.0.1',
@@ -24,7 +27,7 @@ clientConfig.plugins.push(
   })
 )
 
-const compiler = webpack(clientConfig);
+const compiler = webpack(webpackConfig);
 
 compiler.run((err, stats) => {
   if (err) {

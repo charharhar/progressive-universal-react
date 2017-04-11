@@ -48,7 +48,8 @@
   },
   "scripts": {
     "clear": "babel-node tools/scripts/clean",
-    "analyze": "babel-node tools/scripts/analyze",
+    "analyze:client": "babel-node tools/scripts/analyze --client",
+    "analyze:server": "babel-node tools/scripts/analyze --server",
     "develop": "rimraf build && babel-node tools/scripts/develop",
     "tunnel": "rimraf tunnel && cross-env ENABLE_TUNNEL=true babel-node tools/scripts/build && node tunnel/server",
     "build": "rimraf build && babel-node tools/scripts/build",
