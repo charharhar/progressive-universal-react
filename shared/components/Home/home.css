@@ -1,4 +1,5 @@
 .homeWrapper {
+  display: flex;
   border: 1px solid #ccc;
 
   .homeHeading {

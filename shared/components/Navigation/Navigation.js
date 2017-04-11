@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import styles from './navigation.scss'
+import styles from './navigation.css'
 
 const routes = [
   { route: '/', label: 'Home' },

@@ -150,7 +150,7 @@ export default function configFactory({ target, mode }) {
           loader: 'json-loader',
         },
         {
-          test: /\.scss$/,
+          test: /\.css$/,
           rules: removeEmpty([
             ifDevNode({
               loader: 'css-loader/locals',
@@ -169,9 +169,10 @@ export default function configFactory({ target, mode }) {
                       modules: true,
                       importLoaders: 1,
                       localIdentName: '[name]__[local]___[hash:base64:5]',
+                      minimize: isProd,
+                      discardComments: { removeAll: true },
                     },
                   },
-                  { loader: 'sass-loader' }
                 ],
                 fallback: 'style-loader',
               })
@@ -185,9 +186,12 @@ export default function configFactory({ target, mode }) {
                 localIdentName: '[name]__[local]___[hash:base64:5]',
               },
             }),
-            ifDevClient({
-              loader: 'sass-loader',
-            }),
+            ifClient({
+              loader: 'postcss-loader',
+              options: {
+                config: './tools/webpack/postcss.config.js',
+              }
+            })
           ])
         },
         {
