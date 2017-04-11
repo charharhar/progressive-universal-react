@@ -1,4 +1,4 @@
-import './about.css'
+import './about.scss'
 import React from 'react';
 
 const About = () => (

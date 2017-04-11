@@ -150,7 +150,7 @@ export default function configFactory({ target, mode }) {
           loader: 'json-loader',
         },
         {
-          test: /\.css$/,
+          test: /\.scss$/,
           rules: removeEmpty([
             ifDevNode({
               loader: 'css-loader/locals',
@@ -162,8 +162,18 @@ export default function configFactory({ target, mode }) {
             }),
             ifProd({
               loader: ExtractTextPlugin.extract({
+                use: [
+                  {
+                    loader: 'css-loader',
+                    options: {
+                      modules: true,
+                      importLoaders: 1,
+                      localIdentName: '[name]__[local]___[hash:base64:5]',
+                    },
+                  },
+                  { loader: 'sass-loader' }
+                ],
                 fallback: 'style-loader',
-                use: ['css-loader'],
               })
             }),
             ifDevClient({ loader: 'style-loader' }),
@@ -174,6 +184,9 @@ export default function configFactory({ target, mode }) {
                 importLoaders: 1,
                 localIdentName: '[name]__[local]___[hash:base64:5]',
               },
+            }),
+            ifDevClient({
+              loader: 'sass-loader',
             }),
           ])
         },
