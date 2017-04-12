@@ -26,7 +26,6 @@ const server = app.listen(serverPort, host, (err) => {
       if (innerErr) {
         return console.error(err);
       }
-
       console.log(`Server tunnel enabled at ${url}`)
     })
   } else {

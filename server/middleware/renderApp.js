@@ -4,10 +4,11 @@ import path from 'path';
 import React from 'react';
 import appRootDir from 'app-root-dir';
 import { StaticRouter } from 'react-router';
-import { renderToString } from 'react-dom/server';
+import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import config from '../../tools/config';
 
 import App from '../../shared/App';
+import Html from '../../shared/Html';
 
 const isProd = process.env.NODE_ENV === 'production';
 const { host, clientPort, staticPath, clientOutputPath } = config;
@@ -21,19 +22,33 @@ const assetsFilePath = path.resolve(
 const readAssetsJSONFile = () =>
   JSON.parse(fs.readFileSync(assetsFilePath, 'utf8'));
 
-const renderScript = filename =>
-  `<script src="${isProd ? `${staticPath}/client/` : ''}${filename}"></script>`;
+const renderScriptPath = filename =>
+  `${isProd ? `${staticPath}/client/` : ''}${filename}`;
 
-const renderCSS = filename =>
-  `<link rel="stylesheet" type="text/css" href="${staticPath}/client/${filename}" />`
+const renderCSSPath = filename =>
+  isProd ? `${staticPath}/client/${filename}` : false;
+
+const renderDllPath = () =>
+  !isProd ? `${staticPath}/client/vendorDll.js` : false;
 
 const renderApp = (req, res) => {
   const context = {}
   const assetsMap = readAssetsJSONFile();
-  const appHtml = renderToString(
+  const appString = renderToString(
     <StaticRouter location={req.url} context={context}>
       <App />
     </StaticRouter>
+  );
+  const htmlMarkup = renderToStaticMarkup(
+    <Html
+      title={"Universal React Starter"}
+      description={"A bare minimum universal react starter kit"}
+      styles={renderCSSPath(assetsMap.index.css)}
+      scripts={renderScriptPath(assetsMap.index.js)}
+      vendorDll={renderDllPath()}
+    >
+      {appString}
+    </Html>
   );
 
   if (context.url) {
@@ -42,22 +57,7 @@ const renderApp = (req, res) => {
 
   return res
     .status(context.status || 200)
-    .send(`
-      <!doctype html>
-      <html>
-        <head>
-          <meta charset="utf-8" />
-          <meta content="width=device-width, initial-scale=1" name="viewport" />
-          <title>Universal React Starter</title>
-          ${isProd ? renderCSS(assetsMap.index.css) : ''}
-        </head>
-        <body>
-          <div id="app">${appHtml}</div>
-          ${isProd ? '' : `<script src="${staticPath}/client/vendorDll.js"></script>`}
-          ${renderScript(assetsMap.index.js)}
-        </body>
-      </html>
-    `);
+    .send(`<!doctype html>${htmlMarkup}`);
 };
 
 export default renderApp;
