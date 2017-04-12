@@ -11,7 +11,14 @@ import App from '../../shared/App';
 import Html from '../../shared/Html';
 
 const isProd = process.env.NODE_ENV === 'production';
-const { host, clientPort, staticPath, clientOutputPath } = config;
+const {
+  host,
+  clientPort,
+  staticPath,
+  clientOutputPath,
+  title,
+  description,
+} = config;
 
 const assetsFilePath = path.resolve(
   appRootDir.get(),
@@ -41,8 +48,8 @@ const renderApp = (req, res) => {
   );
   const htmlMarkup = renderToStaticMarkup(
     <Html
-      title={"Universal React Starter"}
-      description={"A bare minimum universal react starter kit"}
+      title={title}
+      description={description}
       styles={renderCSSPath(assetsMap.index.css)}
       scripts={renderScriptPath(assetsMap.index.js)}
       vendorDll={renderDllPath()}

@@ -23,6 +23,9 @@ const config = {
 
   targetServer: { target: 'server' },
 
+  title: 'Universal React Starter',
+
+  description: 'A production ready universal react starter kit.'
 }
 
 export default config;
