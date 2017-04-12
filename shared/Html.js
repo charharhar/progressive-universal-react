@@ -12,11 +12,13 @@ export default class Html extends Component {
     } = this.props;
 
     return (
-      <html>
+      <html lang="en">
         <head>
-          <meta charSet="utf-8" />
           <title>{title}</title>
+          <meta name="application-name" content={title} />
           <meta name="description" content={description} />
+          <meta charSet="utf-8" />
+          <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
 
           <meta property="fb:app_id" content="" />
@@ -27,7 +29,6 @@ export default class Html extends Component {
           <meta property="og:type" content="website" />
           <meta property="og:image:width" content="600" />
           <meta property="og:image:height" content="315" />
-          <meta property="og:site_name" content={title} />
 
           <link rel="apple-touch-icon" href="" />
           {
@@ -47,32 +48,21 @@ export default class Html extends Component {
           </div>
           {
             vendorDll &&
-              <script src={vendorDll}></script>
+              <script type="text/javascript" src={vendorDll}></script>
           }
-          <script src={scripts}></script>
+          <script type="text/javascript" src={scripts}></script>
           <script type="application/ld+json">
           {
             JSON.stringify({
               "@context": "http://schema.org",
               "@type": "Organization",
-              "name": title,
-              "url": "https://www.url.com",
-              "image": {
-                "@type": "ImageObject",
-                "url": "url img",
-                "width": 260,
-                "height": 120
-              },
-              "author": {
-                "@type": "Organization",
-                "name": title,
-                "logo": {
-                  "@type": "ImageObject",
-                  "url": "logo",
-                  "width": 260,
-                  "height": 120
-                }
-              }
+              "url": "http://www.your-company-site.com",
+              "logo": "http://www.example.com/logo.png",
+              "contactPoint": [{
+                "@type": "ContactPoint",
+                "telephone": "+1-401-555-1212",
+                "contactType": "customer service"
+              }]
             })
           }
           </script>
