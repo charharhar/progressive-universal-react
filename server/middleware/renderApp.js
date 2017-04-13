@@ -30,10 +30,10 @@ const readAssetsJSONFile = () =>
   JSON.parse(fs.readFileSync(assetsFilePath, 'utf8'));
 
 const renderScriptPath = filename =>
-  `${isProd ? `${staticPath}/client/` : ''}${filename}`;
+  `${isProd ? staticPath : ''}${filename}`;
 
 const renderCSSPath = filename =>
-  isProd ? `${staticPath}/client/${filename}` : false;
+  isProd ? `${staticPath}${filename}` : false;
 
 const renderDllPath = () =>
   !isProd ? `${staticPath}/client/vendorDll.js` : false;

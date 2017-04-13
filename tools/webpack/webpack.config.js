@@ -7,6 +7,8 @@ import nodeExternals from 'webpack-node-externals';
 import AssetsPlugin from 'assets-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import OfflinePlugin from 'offline-plugin';
 
 import config from '../config';
 import { ifElse, removeEmpty } from '../utils';
@@ -66,7 +68,7 @@ export default function configFactory({ target, mode }) {
       ),
       filename: ifProdClient('[name]-[chunkhash].js', '[name].js'),
       chunkFilename: '[name]-[chunkhash].js',
-      publicPath: ifDev(`http://${host}:${clientPort}/client/`),
+      publicPath: ifDev(`http://${host}:${clientPort}/client/`, '/client/'),
       libraryTarget: ifNode('commonjs2', 'var'),
     },
 
@@ -111,20 +113,22 @@ export default function configFactory({ target, mode }) {
         allChunks: true,
       })),
       // Minify JS for production build
-      ifProdClient(() => new webpack.optimize.UglifyJsPlugin({
-        sourceMap: true,
-        compress: {
-          screw_ie8: true,
-          warnings: false,
-        },
-        mangle: {
-          screw_ie8: true,
-        },
-        output: {
-          comments: false,
-          screw_ie8: true,
-        },
-      })),
+      ifProdClient(() =>
+        new webpack.optimize.UglifyJsPlugin({
+          sourceMap: true,
+          compress: {
+            screw_ie8: true,
+            warnings: false,
+          },
+          mangle: {
+            screw_ie8: true,
+          },
+          output: {
+            comments: false,
+            screw_ie8: true,
+          },
+        })
+      ),
       // HappyPack Loaders implemented
       // Set up HappyPack JS loaders for both client/server bundles
       // Went from ~4000ms to ~1700ms
@@ -136,6 +140,42 @@ export default function configFactory({ target, mode }) {
           path: 'babel-loader',
         }]
       }),
+
+      ifProdClient(() =>
+        new HtmlWebpackPlugin({
+          filename: 'index.html',
+          template: `babel-loader!${path.resolve(__dirname, './offlinePageTemplate.js')}`,
+          inject: true,
+          production: true,
+          minify: {
+            removeComments: true,
+            collapseWhitespace: true,
+            removeRedundantAttributes: true,
+            useShortDoctype: true,
+            removeNilAttributes: true,
+            removeStyleLinkTypeAttributes: true,
+            keepClosingSlash: true,
+            minifyJS: true,
+            minifyCSS: true,
+            minifyURLs: true,
+          },
+        })
+      ),
+
+      ifProdClient(() =>
+        new OfflinePlugin({
+          publicPath: '/client/',
+          relativePaths: false,
+          AppCache: false,
+          ServiceWorker: {
+            output: 'sw.js',
+            events: true,
+            publicPath: '/sw.js',
+            navigateFallbackURL: '/client/index.html',
+          }
+        })
+      ),
+
     ]),
 
     module: {
