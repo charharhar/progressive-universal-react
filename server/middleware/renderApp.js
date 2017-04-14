@@ -2,6 +2,7 @@
 import fs from 'fs';
 import path from 'path';
 import React from 'react';
+import serialize from 'serialize-javascript';
 import appRootDir from 'app-root-dir';
 import { StaticRouter } from 'react-router';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
@@ -16,6 +17,7 @@ const {
   clientOutputPath,
   title,
   description,
+  serviceWorker,
 } = config;
 
 const assetsFilePath = path.resolve(
@@ -24,15 +26,53 @@ const assetsFilePath = path.resolve(
   './assets.json',
 );
 
-const readAssetsJSONFile = () =>
-  JSON.parse(fs.readFileSync(assetsFilePath, 'utf8'));
+// Helper functions to generate path names
 
-const renderScriptPath = filename => filename;
+const readAssetsJSONFile = () => JSON.parse(fs.readFileSync(assetsFilePath, 'utf8'));
 
-const renderCSSPath = filename => isProd ? filename : false;
+const renderScriptPath = (filename) => filename;
 
-const renderDllPath = () => !isProd ? `${webPath}/vendorDll.js` : false;
+const renderCSSPath = (filename) => isProd ? filename : false;
 
+const renderDllPath = () => !isProd ? `${webPath}/vendorDll.js` : false
+
+const renderJSONLD = (children) => (
+  <script
+    type="application/ld+json"
+    dangerouslySetInnerHTML={{__html: children}}
+  />
+)
+
+const renderInlineScript = ({ render, type, children }) => ( render ?
+  <script
+    type={type}
+    dangerouslySetInnerHTML={{
+      __html: `window.__CLIENT_CONFIG__=${children}`
+    }}
+  /> : false
+)
+
+const applicationJSONLd = `{
+  "@context": "http://schema.org",
+  "@type": "Organization",
+  "url": "http://www.your-company-site.com",
+  "logo": "http://www.example.com/logo.png",
+  "contactPoint": [{
+    "@type": "ContactPoint",
+    "telephone": "+1-401-555-1212",
+    "contactType": "customer service"
+  }]
+}`
+
+const clientConfig = {
+  render: isProd,
+  type: 'text/javascript',
+  children: serialize({
+    "serviceWorker":{"enabled":true}
+  })
+}
+
+//
 const renderApp = (req, res) => {
   const context = {}
   const assetsMap = readAssetsJSONFile();
@@ -48,6 +88,8 @@ const renderApp = (req, res) => {
       styles={renderCSSPath(assetsMap.index.css)}
       scripts={renderScriptPath(assetsMap.index.js)}
       vendorDll={renderDllPath()}
+      jsonLd={renderJSONLD(applicationJSONLd)}
+      inlineScript={renderInlineScript(clientConfig)}
     >
       {appString}
     </Html>

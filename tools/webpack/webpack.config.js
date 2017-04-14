@@ -7,9 +7,8 @@ import nodeExternals from 'webpack-node-externals';
 import AssetsPlugin from 'assets-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
-import OfflinePlugin from 'offline-plugin';
 
+import serviceWorker from './serviceWorker.config';
 import config from '../config';
 import { ifElse, removeEmpty } from '../utils';
 
@@ -20,7 +19,8 @@ export default function configFactory({ target, mode }) {
     clientOutputPath,
     serverOutputPath,
     host,
-    clientPort
+    clientPort,
+    cssLoaderOptions,
   } = config;
 
   const isDev = mode === 'development';
@@ -36,7 +36,7 @@ export default function configFactory({ target, mode }) {
   const ifDevClient = ifElse(isDev && isClient);
   const ifProdClient = ifElse(isProd && isClient);
 
-  const webpackConfig = {
+  let webpackConfig = {
     target: isClient ? 'web' : 'node',
 
     node: {
@@ -74,80 +74,6 @@ export default function configFactory({ target, mode }) {
 
     resolve: {
       extensions: ['.js'],
-    },
-
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          exclude: '/node_modules/',
-          loader: 'happypack/loader?id=happypack-javascript',
-        },
-        {
-          test: /\.json$/,
-          loader: 'json-loader',
-        },
-        {
-          test: /\.css$/,
-          rules: removeEmpty([
-            ifDevNode({
-              loader: 'css-loader/locals',
-              options: {
-                modules: true,
-                importLoaders: 1,
-                localIdentName: '[name]__[local]___[hash:base64:5]',
-              },
-            }),
-            ifProd({
-              loader: ExtractTextPlugin.extract({
-                use: [
-                  {
-                    loader: 'css-loader',
-                    options: {
-                      modules: true,
-                      importLoaders: 1,
-                      localIdentName: '[name]__[local]___[hash:base64:5]',
-                      minimize: isProd,
-                      discardComments: { removeAll: true },
-                    },
-                  },
-                ],
-                fallback: 'style-loader',
-              })
-            }),
-            ifDevClient({ loader: 'style-loader' }),
-            ifDevClient({
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                importLoaders: 1,
-                localIdentName: '[name]__[local]___[hash:base64:5]',
-              },
-            }),
-            ifClient({
-              loader: 'postcss-loader',
-              options: {
-                config: './tools/webpack/postcss.config.js',
-              }
-            })
-          ])
-        },
-        {
-          test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
-          loader: 'file-loader',
-          query: {
-            name: isDev ? '[path][name].[ext]?[hash:8]' : '[hash:8].[ext]',
-          },
-        },
-        {
-          test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
-          loader: 'url-loader',
-          query: {
-            name: isDev ? '[path][name].[ext]?[hash:8]' : '[hash:8].[ext]',
-            limit: 10000,
-          },
-        },
-      ]
     },
 
     plugins: removeEmpty([
@@ -214,45 +140,72 @@ export default function configFactory({ target, mode }) {
           path: 'babel-loader',
         }]
       }),
-
-      ifProdClient(() =>
-        new HtmlWebpackPlugin({
-          filename: 'index.html',
-          template: `babel-loader!${path.resolve(__dirname, './offlinePageTemplate.js')}`,
-          inject: true,
-          production: true,
-          minify: {
-            removeComments: true,
-            collapseWhitespace: true,
-            removeRedundantAttributes: true,
-            useShortDoctype: true,
-            removeNilAttributes: true,
-            removeStyleLinkTypeAttributes: true,
-            keepClosingSlash: true,
-            minifyJS: true,
-            minifyCSS: true,
-            minifyURLs: true,
-          },
-        })
-      ),
-
-      ifProdClient(() =>
-        new OfflinePlugin({
-          publicPath: '/client/',
-          relativePaths: false,
-          AppCache: false,
-          ServiceWorker: {
-            output: 'sw.js',
-            events: true,
-            publicPath: '/sw.js',
-            navigateFallbackURL: '/client/index.html',
-          }
-        })
-      ),
-
     ]),
 
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: '/node_modules/',
+          loader: 'happypack/loader?id=happypack-javascript',
+        },
+        {
+          test: /\.json$/,
+          loader: 'json-loader',
+        },
+        {
+          test: /\.css$/,
+          rules: removeEmpty([
+            ifProd({
+              loader: ExtractTextPlugin.extract({
+                use: [{
+                  loader: 'css-loader',
+                  options: cssLoaderOptions,
+                }],
+                fallback: 'style-loader',
+              })
+            }),
+            ifDevClient({
+              loader: 'style-loader'
+            }),
+            ifDevClient({
+              loader: 'css-loader',
+              options: cssLoaderOptions,
+            }),
+            ifDevNode({
+              loader: 'css-loader/locals',
+              options: cssLoaderOptions,
+            }),
+            ifClient({
+              loader: 'postcss-loader',
+              options: {
+                config: './tools/webpack/postcss.config.js',
+              }
+            })
+          ])
+        },
+        {
+          test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
+          loader: 'file-loader',
+          query: {
+            name: ifDev('[path][name].[ext]?[hash:8]', '[hash:8].[ext]'),
+          },
+        },
+        {
+          test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
+          loader: 'url-loader',
+          query: {
+            name: ifDev('[path][name].[ext]?[hash:8]', '[hash:8].[ext]'),
+            limit: 10000,
+          },
+        },
+      ]
+    },
   };
+
+  if (isProd && isClient) {
+    webpackConfig = serviceWorker(webpackConfig);
+  }
 
   return webpackConfig;
 }

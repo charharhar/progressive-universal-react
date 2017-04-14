@@ -9,7 +9,7 @@ import renderApp from './middleware/renderApp';
 
 const ngrok = process.env.ENABLE_TUNNEL === 'true' ? require('ngrok') : false;
 const isProd = process.env.NODE_ENV === 'production';
-const { serverPort, host, clientOutputPath } = config;
+const { serverPort, host, clientOutputPath, webPath } = config;
 
 const app = express();
 
@@ -25,9 +25,19 @@ if (isProd) {
       )
     )
   );
+
+  app.get(`${webPath}/index.html`, (req, res, next) =>
+    res.send(
+      path.resolve(
+        appRootDir.get(),
+        clientOutputPath,
+        './index.html'
+      )
+    )
+  )
 }
 
-app.use('/client', express.static(path.resolve(appRootDir.get(), clientOutputPath)));
+app.use(webPath, express.static(path.resolve(appRootDir.get(), clientOutputPath)));
 app.use(renderApp);
 
 const server = app.listen(serverPort, host, (err) => {

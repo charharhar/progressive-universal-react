@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
+import * as OfflinePluginRuntime from 'offline-plugin/runtime';
 
 import App from '../shared/App';
 
@@ -22,7 +23,6 @@ const renderApp = AppComponent =>
 render(renderApp(App), rootEl);
 
 if (!isProd && module.hot) {
-  // flow-disable-next-line
   module.hot.accept('../shared/App', () => {
     const nextApp = require('../shared/App').default;
     render(renderApp(nextApp), rootEl);
@@ -30,5 +30,5 @@ if (!isProd && module.hot) {
 }
 
 if (isProd) {
-  require('offline-plugin/runtime').install(); // eslint-disable-line global-require
+  OfflinePluginRuntime.install();
 }

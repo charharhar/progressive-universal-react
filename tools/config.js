@@ -1,5 +1,8 @@
 
 const config = {
+  title: 'Universal React Starter',
+
+  description: 'A production ready universal react starter kit.',
 
   host: 'localhost',
 
@@ -21,9 +24,14 @@ const config = {
 
   targetServer: { target: 'server' },
 
-  title: 'Universal React Starter',
+  cssLoaderOptions: {
+    modules: true,
+    importLoaders: 1,
+    localIdentName: '[name]__[local]___[hash:base64:5]',
+    minimize: process.env.NODE_ENV === 'production',
+    discardComments: { removeAll: process.env.NODE_ENV === 'production' }
+  },
 
-  description: 'A production ready universal react starter kit.'
 }
 
 export default config;
