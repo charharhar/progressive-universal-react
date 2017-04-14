@@ -7,9 +7,7 @@ const config = {
 
   serverPort: `${process.env.ENABLE_TUNNEL === 'true' ? 1337 : 3000}`,
 
-  staticPath: '/static',
-
-  buildPathName: `${process.env.ENABLE_TUNNEL === 'true' ? 'tunnel' : 'build'}`,
+  webPath: '/client',
 
   clientOutputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/client' : './build/client'}`,
 

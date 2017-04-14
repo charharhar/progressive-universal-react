@@ -8,12 +8,26 @@ import App from '../shared/App';
 import renderApp from './middleware/renderApp';
 
 const ngrok = process.env.ENABLE_TUNNEL === 'true' ? require('ngrok') : false;
+const isProd = process.env.NODE_ENV === 'production';
+const { serverPort, host, clientOutputPath } = config;
 
 const app = express();
-const { serverPort, host, buildPathName } = config;
 
 app.use(compression());
-app.use('/static', express.static(buildPathName));
+
+if (isProd) {
+  app.get('/sw.js', (req, res, next) =>
+    res.sendFile(
+      path.resolve(
+        appRootDir.get(),
+        clientOutputPath,
+        'sw.js'
+      )
+    )
+  );
+}
+
+app.use('/client', express.static(path.resolve(appRootDir.get(), clientOutputPath)));
 app.use(renderApp);
 
 const server = app.listen(serverPort, host, (err) => {

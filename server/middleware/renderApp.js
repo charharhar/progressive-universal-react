@@ -12,9 +12,7 @@ import Html from '../../shared/Html';
 
 const isProd = process.env.NODE_ENV === 'production';
 const {
-  host,
-  clientPort,
-  staticPath,
+  webPath,
   clientOutputPath,
   title,
   description,
@@ -29,14 +27,11 @@ const assetsFilePath = path.resolve(
 const readAssetsJSONFile = () =>
   JSON.parse(fs.readFileSync(assetsFilePath, 'utf8'));
 
-const renderScriptPath = filename =>
-  `${isProd ? staticPath : ''}${filename}`;
+const renderScriptPath = filename => filename;
 
-const renderCSSPath = filename =>
-  isProd ? `${staticPath}${filename}` : false;
+const renderCSSPath = filename => isProd ? filename : false;
 
-const renderDllPath = () =>
-  !isProd ? `${staticPath}/client/vendorDll.js` : false;
+const renderDllPath = () => !isProd ? `${webPath}/vendorDll.js` : false;
 
 const renderApp = (req, res) => {
   const context = {}

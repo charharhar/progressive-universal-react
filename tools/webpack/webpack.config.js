@@ -76,6 +76,80 @@ export default function configFactory({ target, mode }) {
       extensions: ['.js'],
     },
 
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          exclude: '/node_modules/',
+          loader: 'happypack/loader?id=happypack-javascript',
+        },
+        {
+          test: /\.json$/,
+          loader: 'json-loader',
+        },
+        {
+          test: /\.css$/,
+          rules: removeEmpty([
+            ifDevNode({
+              loader: 'css-loader/locals',
+              options: {
+                modules: true,
+                importLoaders: 1,
+                localIdentName: '[name]__[local]___[hash:base64:5]',
+              },
+            }),
+            ifProd({
+              loader: ExtractTextPlugin.extract({
+                use: [
+                  {
+                    loader: 'css-loader',
+                    options: {
+                      modules: true,
+                      importLoaders: 1,
+                      localIdentName: '[name]__[local]___[hash:base64:5]',
+                      minimize: isProd,
+                      discardComments: { removeAll: true },
+                    },
+                  },
+                ],
+                fallback: 'style-loader',
+              })
+            }),
+            ifDevClient({ loader: 'style-loader' }),
+            ifDevClient({
+              loader: 'css-loader',
+              options: {
+                modules: true,
+                importLoaders: 1,
+                localIdentName: '[name]__[local]___[hash:base64:5]',
+              },
+            }),
+            ifClient({
+              loader: 'postcss-loader',
+              options: {
+                config: './tools/webpack/postcss.config.js',
+              }
+            })
+          ])
+        },
+        {
+          test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
+          loader: 'file-loader',
+          query: {
+            name: isDev ? '[path][name].[ext]?[hash:8]' : '[hash:8].[ext]',
+          },
+        },
+        {
+          test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
+          loader: 'url-loader',
+          query: {
+            name: isDev ? '[path][name].[ext]?[hash:8]' : '[hash:8].[ext]',
+            limit: 10000,
+          },
+        },
+      ]
+    },
+
     plugins: removeEmpty([
       // Define some process variables
       new webpack.DefinePlugin({
@@ -177,80 +251,6 @@ export default function configFactory({ target, mode }) {
       ),
 
     ]),
-
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          exclude: '/node_modules/',
-          loader: 'happypack/loader?id=happypack-javascript',
-        },
-        {
-          test: /\.json$/,
-          loader: 'json-loader',
-        },
-        {
-          test: /\.css$/,
-          rules: removeEmpty([
-            ifDevNode({
-              loader: 'css-loader/locals',
-              options: {
-                modules: true,
-                importLoaders: 1,
-                localIdentName: '[name]__[local]___[hash:base64:5]',
-              },
-            }),
-            ifProd({
-              loader: ExtractTextPlugin.extract({
-                use: [
-                  {
-                    loader: 'css-loader',
-                    options: {
-                      modules: true,
-                      importLoaders: 1,
-                      localIdentName: '[name]__[local]___[hash:base64:5]',
-                      minimize: isProd,
-                      discardComments: { removeAll: true },
-                    },
-                  },
-                ],
-                fallback: 'style-loader',
-              })
-            }),
-            ifDevClient({ loader: 'style-loader' }),
-            ifDevClient({
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                importLoaders: 1,
-                localIdentName: '[name]__[local]___[hash:base64:5]',
-              },
-            }),
-            ifClient({
-              loader: 'postcss-loader',
-              options: {
-                config: './tools/webpack/postcss.config.js',
-              }
-            })
-          ])
-        },
-        {
-          test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
-          loader: 'file-loader',
-          query: {
-            name: isDev ? '[path][name].[ext]?[hash:8]' : '[hash:8].[ext]',
-          },
-        },
-        {
-          test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
-          loader: 'url-loader',
-          query: {
-            name: isDev ? '[path][name].[ext]?[hash:8]' : '[hash:8].[ext]',
-            limit: 10000,
-          },
-        },
-      ]
-    },
 
   };
 
