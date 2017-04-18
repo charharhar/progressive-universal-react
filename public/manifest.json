@@ -1,0 +1,11 @@
+{
+  "name": "Universal React Starter",
+  "short_name": "Uni-Rct-St",
+  "description": "A production ready universal react starter kit.",
+  "lang": "en",
+  "start_url": "./",
+  "icons": [],
+  "theme_color": "#222222",
+  "background_color": "#ffffff",
+  "display": "standalone"
+}

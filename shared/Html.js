@@ -21,6 +21,7 @@ function Html (props) {
         <meta charSet="utf-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#222222" />
 
         <meta property="fb:app_id" content="" />
         <meta property="og:title" content={title} />
@@ -32,6 +33,7 @@ function Html (props) {
         <meta property="og:image:height" content="315" />
 
         <link rel="apple-touch-icon" href="" />
+        <link rel="manifest" href="/manifest.json" />
         {
           styles &&
             <link

@@ -38,6 +38,7 @@ if (isProd) {
 }
 
 app.use(webPath, express.static(path.resolve(appRootDir.get(), clientOutputPath)));
+app.use(express.static(path.resolve(appRootDir.get(), './public')));
 app.use(renderApp);
 
 const server = app.listen(serverPort, host, (err) => {
