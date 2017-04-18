@@ -30,5 +30,10 @@ if (!isProd && module.hot) {
 }
 
 if (isProd) {
-  OfflinePluginRuntime.install();
+  OfflinePluginRuntime.install({
+      onUpdating: () => undefined,
+      onUpdateReady: () => OfflinePluginRuntime.applyUpdate(),
+      onUpdated: () => window.location.reload(),
+      onUpdateFailed: () => undefined,
+    });
 }

@@ -131,15 +131,47 @@ export default function configFactory({ target, mode }) {
       ),
       // HappyPack Loaders implemented
       // Set up HappyPack JS loaders for both client/server bundles
-      // Went from ~4000ms to ~1700ms
       new HappyPack({
         id: 'happypack-javascript',
         verbose: false,
         threads: 4,
         loaders: [{
           path: 'babel-loader',
+          query: {
+            babelrc: false,
+            presets: removeEmpty([
+              'react',
+              'stage-3',
+              ifClient(['latest', { es2015: { modules: false } }]),
+              ifNode(['env', { targets: { node: true }, modules: false }]),
+            ])
+          }
         }]
       }),
+
+      // Set up HappyPack CSS loaders for DevClient bundles
+      // ExtractTextPlugin for Prod bundles
+      ifDevClient(() =>
+        new HappyPack({
+          id: 'happypack-css-devclient',
+          verbose: false,
+          threads: 4,
+          loaders: [
+            'style-loader',
+            {
+              path: 'css-loader',
+              query: cssLoaderOptions,
+            },
+            {
+              loader: 'postcss-loader',
+              query: {
+                config: './tools/webpack/postcss.config.js',
+              }
+            }
+          ]
+        })
+      ),
+      // END PLUGINS
     ]),
 
     module: {
@@ -148,6 +180,12 @@ export default function configFactory({ target, mode }) {
           test: /\.js$/,
           exclude: '/node_modules/',
           loader: 'happypack/loader?id=happypack-javascript',
+          include: removeEmpty([
+            ifNode(path.resolve(appRootDir.get(), './server')),
+            ifClient(path.resolve(appRootDir.get(), './client')),
+            path.resolve(appRootDir.get(), './shared'),
+            path.resolve(appRootDir.get(), './tools/config'),
+          ]),
         },
         {
           test: /\.json$/,
@@ -158,30 +196,28 @@ export default function configFactory({ target, mode }) {
           rules: removeEmpty([
             ifProd({
               loader: ExtractTextPlugin.extract({
-                use: [{
-                  loader: 'css-loader',
-                  options: cssLoaderOptions,
-                }],
+                use: [
+                  {
+                    loader: 'css-loader',
+                    options: cssLoaderOptions,
+                  },
+                  {
+                    loader: 'postcss-loader',
+                    options: {
+                      config: './tools/webpack/postcss.config.js',
+                    }
+                  }
+                ],
                 fallback: 'style-loader',
               })
             }),
             ifDevClient({
-              loader: 'style-loader'
-            }),
-            ifDevClient({
-              loader: 'css-loader',
-              options: cssLoaderOptions,
+              loaders: ['happypack/loader?id=happypack-css-devclient'],
             }),
             ifDevNode({
               loader: 'css-loader/locals',
               options: cssLoaderOptions,
             }),
-            ifClient({
-              loader: 'postcss-loader',
-              options: {
-                config: './tools/webpack/postcss.config.js',
-              }
-            })
           ])
         },
         {
