@@ -1,4 +1,5 @@
-Progressive Universal React
+<h1 align="center">Progressive Universal React</h1>
+<p align="center">A production ready progressive universal react starter kit.</p>
 
 ## About
 This is Version 1.0 of my personal starter kit containing most of (what I believe to be atleast) the newest and cutting edge technologies today in web app development.
