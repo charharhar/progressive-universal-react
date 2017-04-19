@@ -14,6 +14,7 @@ const cspConfig = {
     scriptSrc: [
       "'self'",
       "'unsafe-inline'",
+      'https://cdn.polyfill.io',
     ],
     styleSrc: [
       "'self'",

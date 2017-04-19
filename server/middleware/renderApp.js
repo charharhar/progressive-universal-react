@@ -2,7 +2,6 @@
 import { readFileSync as fsReadFileSync } from 'fs';
 import { resolve as pathResolve } from 'path';
 import React from 'react';
-import serialize from 'serialize-javascript';
 import appRootDir from 'app-root-dir';
 import { StaticRouter } from 'react-router';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
@@ -58,9 +57,9 @@ const applicationJSONLd = jsonLd;
 const clientConfig = {
   render: isProd,
   key: '__CLIENT_CONFIG__',
-  children: serialize({
+  children: `{
     "serviceWorker":{"enabled":true}
-  })
+  }`
 }
 
 //

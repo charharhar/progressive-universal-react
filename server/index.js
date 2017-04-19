@@ -1,4 +1,3 @@
-import { readFile as fsReadFile } from 'fs';
 import { resolve as pathResolve } from 'path';
 import express from 'express';
 import compression from 'compression';

@@ -1,11 +1,9 @@
 {
   "name": "Progressive Universal React",
-  "short_name": "Uni-Rct-St",
+  "short_name": "Prg-Uni-Rct",
   "description": "A production ready progressive universal react starter kit.",
   "lang": "en",
   "start_url": "./",
   "icons": [],
-  "theme_color": "#222222",
-  "background_color": "#ffffff",
   "display": "standalone"
 }
