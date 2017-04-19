@@ -34,7 +34,7 @@ if (isProd) {
   // Register service worker
   app.get('/sw.js', serviceWorker);
   // Serve offline page template
-  app.get(`${webPath}/${offlinePageName}`, offlinePage);
+  app.get(`${webPath}${offlinePageName}`, offlinePage);
 }
 
 // Serve ./build/client from /client

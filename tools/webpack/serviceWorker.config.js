@@ -31,13 +31,13 @@ export default function serviceWorker(webpackConfig) {
 
   webpackConfig.plugins.push(
     new OfflinePlugin({
-      publicPath: '/client/',
+      publicPath: webPath,
       relativePaths: false,
       ServiceWorker: {
         output: 'sw.js',
         events: true,
         publicPath: '/sw.js',
-        navigateFallbackURL: `${webPath}/${offlinePageName}`,
+        navigateFallbackURL: `${webPath}${offlinePageName}`,
       },
       AppCache: false,
     })

@@ -34,7 +34,7 @@ const renderScriptPath = (filename) => filename;
 
 const renderCSSPath = (filename) => isProd ? filename : false;
 
-const renderDllPath = () => !isProd ? `${webPath}/vendorDll.js` : false
+const renderDllPath = () => !isProd ? `${webPath}vendorDll.js` : false
 
 const renderJSONLD = (children) => (
   <script
@@ -43,11 +43,11 @@ const renderJSONLD = (children) => (
   />
 )
 
-const renderInlineScript = ({ render, type, children }) => ( render ?
+const renderInlineScript = ({ render, key, children }) => ( render ?
   <script
-    type={type}
+    type='text/javascript'
     dangerouslySetInnerHTML={{
-      __html: `window.__CLIENT_CONFIG__=${children}`
+      __html: `window.${key}=${children}`
     }}
   /> : false
 )
@@ -66,7 +66,7 @@ const applicationJSONLd = `{
 
 const clientConfig = {
   render: isProd,
-  type: 'text/javascript',
+  key: '__CLIENT_CONFIG__',
   children: serialize({
     "serviceWorker":{"enabled":true}
   })

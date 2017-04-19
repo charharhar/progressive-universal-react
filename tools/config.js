@@ -10,7 +10,7 @@ const config = {
 
   serverPort: `${process.env.ENABLE_TUNNEL === 'true' ? 1337 : 3000}`,
 
-  webPath: '/client',
+  webPath: '/client/',
 
   publicPath: './public',
 
