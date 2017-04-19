@@ -1,4 +1,4 @@
-import path from 'path';
+import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import OfflinePlugin from 'offline-plugin';
@@ -7,7 +7,7 @@ export default function serviceWorker(webpackConfig) {
   webpackConfig.plugins.push(
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: `babel-loader!${path.resolve(__dirname, '../helpers/offlinePageTemplate.js')}`,
+      template: `babel-loader!${pathResolve(__dirname, '../helpers/offlinePageTemplate.js')}`,
       production: true,
       minify: {
         removeComments: true,

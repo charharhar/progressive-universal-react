@@ -1,6 +1,6 @@
-import path from 'path';
 import chalk from 'chalk';
 import webpack from 'webpack';
+import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import HappyPack from 'happypack';
 import nodeExternals from 'webpack-node-externals';
@@ -57,16 +57,16 @@ export default function configFactory({ target, mode }) {
         ifDevClient('react-hot-loader/patch'),
         ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://${host}:${clientPort}/__webpack_hmr`),
         ifClient(
-          path.resolve(appRootDir.get(), './client/index'),
-          path.resolve(appRootDir.get(), './server/index')
+          pathResolve(appRootDir.get(), './client/index'),
+          pathResolve(appRootDir.get(), './server/index')
         ),
       ]),
     },
 
     output: {
       path: ifClient(
-        path.resolve(appRootDir.get(), clientOutputPath),
-        path.resolve(appRootDir.get(), serverOutputPath)
+        pathResolve(appRootDir.get(), clientOutputPath),
+        pathResolve(appRootDir.get(), serverOutputPath)
       ),
       filename: ifProdClient('[name]-[chunkhash].js', '[name].js'),
       chunkFilename: '[name]-[chunkhash].js',
@@ -95,7 +95,7 @@ export default function configFactory({ target, mode }) {
       ifClient(() =>
         new AssetsPlugin({
           filename: 'assets.json',
-          path: path.resolve(appRootDir.get(), clientOutputPath),
+          path: pathResolve(appRootDir.get(), clientOutputPath),
         }),
       ),
 
@@ -108,7 +108,7 @@ export default function configFactory({ target, mode }) {
       // Vendor dll reference to the manifest file to improve development rebuilding speeds
       ifDevClient(() => new webpack.DllReferencePlugin({
         manifest: require(
-          path.resolve(
+          pathResolve(
             appRootDir.get(),
             clientOutputPath,
             './vendorDll.json',
@@ -125,22 +125,22 @@ export default function configFactory({ target, mode }) {
       ),
 
       // Minify JS for production build
-      // ifProdClient(() =>
-      //   new webpack.optimize.UglifyJsPlugin({
-      //     sourceMap: true,
-      //     compress: {
-      //       screw_ie8: true,
-      //       warnings: false,
-      //     },
-      //     mangle: {
-      //       screw_ie8: true,
-      //     },
-      //     output: {
-      //       comments: false,
-      //       screw_ie8: true,
-      //     },
-      //   })
-      // ),
+      ifProdClient(() =>
+        new webpack.optimize.UglifyJsPlugin({
+          sourceMap: true,
+          compress: {
+            screw_ie8: true,
+            warnings: false,
+          },
+          mangle: {
+            screw_ie8: true,
+          },
+          output: {
+            comments: false,
+            screw_ie8: true,
+          },
+        })
+      ),
 
       // HappyPack Loaders implemented
       // Set up HappyPack JS loaders for both client/server bundles
@@ -195,10 +195,10 @@ export default function configFactory({ target, mode }) {
           exclude: '/node_modules/',
           loader: 'happypack/loader?id=happypack-javascript',
           include: removeEmpty([
-            ifNode(path.resolve(appRootDir.get(), './server')),
-            ifClient(path.resolve(appRootDir.get(), './client')),
-            path.resolve(appRootDir.get(), './shared'),
-            path.resolve(appRootDir.get(), './tools/config'),
+            ifNode(pathResolve(appRootDir.get(), './server')),
+            ifClient(pathResolve(appRootDir.get(), './client')),
+            pathResolve(appRootDir.get(), './shared'),
+            pathResolve(appRootDir.get(), './tools/config'),
           ]),
         },
         {

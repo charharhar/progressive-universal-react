@@ -1,4 +1,3 @@
-import path from 'path';
 import express from 'express';
 import appRootDir from 'app-root-dir';
 import createWebpackDevMiddleware from 'webpack-dev-middleware';

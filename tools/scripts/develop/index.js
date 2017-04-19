@@ -1,4 +1,4 @@
-import path from 'path';
+import { resolve as pathResolve } from 'path';
 import chokidar from 'chokidar';
 import appRootDir from 'app-root-dir';
 import { log } from '../../utils';
@@ -7,7 +7,7 @@ let HotDevServers = require('./HotDevServers').default;
 let devServer = new HotDevServers();
 
 const watcher = chokidar.watch([
-  path.resolve(appRootDir.get(), 'tools')
+  pathResolve(appRootDir.get(), 'tools')
 ]);
 
 watcher.on('ready', () => {

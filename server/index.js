@@ -1,5 +1,5 @@
-import fs from 'fs';
-import path from 'path';
+import { readFile as fsReadFile } from 'fs';
+import { resolve as pathResolve } from 'path';
 import express from 'express';
 import compression from 'compression';
 import appRootDir from 'app-root-dir';
@@ -10,7 +10,7 @@ import renderApp from './middleware/renderApp';
 
 const ngrok = process.env.ENABLE_TUNNEL === 'true' ? require('ngrok') : false;
 const isProd = process.env.NODE_ENV === 'production';
-const { serverPort, host, clientOutputPath, webPath } = config;
+const { serverPort, host, clientOutputPath, webPath, publicPath } = config;
 
 const app = express();
 
@@ -19,7 +19,7 @@ app.use(compression());
 if (isProd) {
   app.get('/sw.js', (req, res, next) =>
     res.sendFile(
-      path.resolve(
+      pathResolve(
         appRootDir.get(),
         clientOutputPath,
         './sw.js'
@@ -28,8 +28,8 @@ if (isProd) {
   );
 
   app.get(`${webPath}/index.html`, (req, res, next) =>
-    fs.readFile(
-      path.resolve(
+    fsReadFile(
+      pathResolve(
         appRootDir.get(),
         clientOutputPath,
         './index.html'
@@ -47,8 +47,10 @@ if (isProd) {
   );
 }
 
-app.use(webPath, express.static(path.resolve(appRootDir.get(), clientOutputPath)));
-app.use(express.static(path.resolve(appRootDir.get(), './public')));
+// Serve ./build/client from /client
+app.use(webPath, express.static(pathResolve(appRootDir.get(), clientOutputPath)));
+// Serve ./public from /
+app.use('/', express.static(pathResolve(appRootDir.get(), './public')));
 app.use(renderApp);
 
 const server = app.listen(serverPort, host, (err) => {

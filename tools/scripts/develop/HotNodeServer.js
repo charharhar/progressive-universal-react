@@ -1,11 +1,11 @@
-import path from 'path';
+import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import { spawn } from 'child_process';
 import { log } from '../../utils'
 
 class HotNodeServer {
   constructor(nodeCompiler) {
-    const compiledEntryFile = path.resolve(
+    const compiledEntryFile = pathResolve(
       appRootDir.get(),
       nodeCompiler.options.output.path,
       `${Object.keys(nodeCompiler.options.entry)[0]}.js`

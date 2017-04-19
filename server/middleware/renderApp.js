@@ -1,6 +1,6 @@
 
-import fs from 'fs';
-import path from 'path';
+import { readFileSync as fsReadFileSync } from 'fs';
+import { resolve as pathResolve } from 'path';
 import React from 'react';
 import serialize from 'serialize-javascript';
 import appRootDir from 'app-root-dir';
@@ -20,7 +20,7 @@ const {
   serviceWorker,
 } = config;
 
-const assetsFilePath = path.resolve(
+const assetsFilePath = pathResolve(
   appRootDir.get(),
   clientOutputPath,
   './assets.json',
@@ -28,7 +28,7 @@ const assetsFilePath = path.resolve(
 
 // Helper functions to generate path names
 
-const readAssetsJSONFile = () => JSON.parse(fs.readFileSync(assetsFilePath, 'utf8'));
+const readAssetsJSONFile = () => JSON.parse(fsReadFileSync(assetsFilePath, 'utf8'));
 
 const renderScriptPath = (filename) => filename;
 

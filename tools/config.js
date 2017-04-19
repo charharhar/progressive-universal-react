@@ -12,6 +12,8 @@ const config = {
 
   webPath: '/client',
 
+  publicPath: './public',
+
   clientOutputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/client' : './build/client'}`,
 
   serverOutputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/server' : './build/server'}`,

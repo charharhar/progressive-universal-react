@@ -1,5 +1,4 @@
 
-import path from 'path';
 import appRootDir from 'app-root-dir';
 import { execSync } from 'child_process';
 

@@ -1,7 +1,5 @@
 
-import path from 'path';
 import webpack from 'webpack';
-import appRootDir from 'app-root-dir';
 import configFactory from '../webpack/webpack.config';
 import { createConfigObject, log } from '../utils';
 import config from '../config';
