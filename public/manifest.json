@@ -1,7 +1,7 @@
 {
-  "name": "Universal React Starter",
+  "name": "Progressive Universal React",
   "short_name": "Uni-Rct-St",
-  "description": "A production ready universal react starter kit.",
+  "description": "A production ready progressive universal react starter kit.",
   "lang": "en",
   "start_url": "./",
   "icons": [],

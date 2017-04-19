@@ -1,8 +1,8 @@
 
 const config = {
-  title: 'Universal React Starter',
+  title: 'Progressive Universal React',
 
-  description: 'A production ready universal react starter kit.',
+  description: 'A production ready progressive universal react starter kit.',
 
   host: 'localhost',
 
