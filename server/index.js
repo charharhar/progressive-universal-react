@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import express from 'express';
 import compression from 'compression';
@@ -21,20 +22,29 @@ if (isProd) {
       path.resolve(
         appRootDir.get(),
         clientOutputPath,
-        'sw.js'
+        './sw.js'
       )
     )
   );
 
   app.get(`${webPath}/index.html`, (req, res, next) =>
-    res.send(
+    fs.readFile(
       path.resolve(
         appRootDir.get(),
         clientOutputPath,
         './index.html'
-      )
+      ),
+      'utf-8',
+      (err, data) => {
+        if (err) {
+          res.status(500).send('Error returning offline page');
+          return;
+        }
+
+        res.send(data);
+      }
     )
-  )
+  );
 }
 
 app.use(webPath, express.static(path.resolve(appRootDir.get(), clientOutputPath)));

@@ -50,6 +50,8 @@ export default function configFactory({ target, mode }) {
 
     devtool: isProd ? 'hidden-source-map' : 'source-map',
 
+    performance: isProd ? { hints: 'warning' } : false,
+
     entry: {
       index: removeEmpty([
         ifDevClient('react-hot-loader/patch'),
@@ -82,10 +84,13 @@ export default function configFactory({ target, mode }) {
         'process.env.NODE_ENV': JSON.stringify(mode),
         'process.env.ENABLE_TUNNEL': JSON.stringify(process.env.ENABLE_TUNNEL),
       }),
+
       // No errors during development to prevent crashing
       ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
+
       // [chunkhash] only change when content has change, for long term browser caching
       ifClient(() => new WebpackMd5Hash()),
+
       // Generates JSON file mapping all output files
       ifClient(() =>
         new AssetsPlugin({
@@ -93,10 +98,13 @@ export default function configFactory({ target, mode }) {
           path: path.resolve(appRootDir.get(), clientOutputPath),
         }),
       ),
+
       // Enable hot module replacement plugin
       ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
+
       // Prints more readable module names in the browser console on HMR updates
       ifDevClient(() => new webpack.NamedModulesPlugin()),
+
       // Vendor dll reference to the manifest file to improve development rebuilding speeds
       ifDevClient(() => new webpack.DllReferencePlugin({
         manifest: require(
@@ -107,28 +115,33 @@ export default function configFactory({ target, mode }) {
           )
         ),
       })),
+
       // Extract CSS into CSS files for production build
-      ifProd(() => new ExtractTextPlugin({
-        filename: '[name]-[chunkhash].css',
-        allChunks: true,
-      })),
-      // Minify JS for production build
-      ifProdClient(() =>
-        new webpack.optimize.UglifyJsPlugin({
-          sourceMap: true,
-          compress: {
-            screw_ie8: true,
-            warnings: false,
-          },
-          mangle: {
-            screw_ie8: true,
-          },
-          output: {
-            comments: false,
-            screw_ie8: true,
-          },
-        })
+      ifProd(() =>
+        new ExtractTextPlugin({
+          filename: '[name]-[chunkhash].css',
+          allChunks: true,
+        }),
       ),
+
+      // Minify JS for production build
+      // ifProdClient(() =>
+      //   new webpack.optimize.UglifyJsPlugin({
+      //     sourceMap: true,
+      //     compress: {
+      //       screw_ie8: true,
+      //       warnings: false,
+      //     },
+      //     mangle: {
+      //       screw_ie8: true,
+      //     },
+      //     output: {
+      //       comments: false,
+      //       screw_ie8: true,
+      //     },
+      //   })
+      // ),
+
       // HappyPack Loaders implemented
       // Set up HappyPack JS loaders for both client/server bundles
       new HappyPack({
@@ -166,11 +179,12 @@ export default function configFactory({ target, mode }) {
               loader: 'postcss-loader',
               query: {
                 config: './tools/webpack/postcss.config.js',
-              }
-            }
-          ]
+              },
+            },
+          ],
         })
       ),
+
       // END PLUGINS
     ]),
 
@@ -186,10 +200,6 @@ export default function configFactory({ target, mode }) {
             path.resolve(appRootDir.get(), './shared'),
             path.resolve(appRootDir.get(), './tools/config'),
           ]),
-        },
-        {
-          test: /\.json$/,
-          loader: 'json-loader',
         },
         {
           test: /\.css$/,
@@ -219,6 +229,10 @@ export default function configFactory({ target, mode }) {
               options: cssLoaderOptions,
             }),
           ])
+        },
+        {
+          test: /\.json$/,
+          loader: 'json-loader',
         },
         {
           test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,

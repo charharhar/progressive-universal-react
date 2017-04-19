@@ -29,6 +29,9 @@ export default function serviceWorker(webpackConfig) {
     new OfflinePlugin({
       publicPath: '/client/',
       relativePaths: false,
+      caches: {
+        main: ['index.html', ':rest:'],
+      },
       ServiceWorker: {
         output: 'sw.js',
         events: true,
