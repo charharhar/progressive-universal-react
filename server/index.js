@@ -6,6 +6,7 @@ import appRootDir from 'app-root-dir';
 import config from '../tools/config';
 
 import App from '../shared/App';
+import security from './middleware/security';
 import serviceWorker from './middleware/serviceWorker';
 import offlinePage from './middleware/offlinePage';
 import renderApp from './middleware/renderApp';
@@ -26,6 +27,8 @@ const app = express();
 // ===========================
 //         Middlewares
 // ===========================
+app.disable('x-powered-by');
+app.use(...security);
 
 // Gzip compress all responses
 app.use(compression());
