@@ -40,6 +40,9 @@ export default function serviceWorker(webpackConfig) {
         navigateFallbackURL: `${webPath}${offlinePageName}`,
       },
       AppCache: false,
+      externals: [
+        'https://cdn.polyfill.io/v2/polyfill.min.js',
+      ],
     })
   );
 
