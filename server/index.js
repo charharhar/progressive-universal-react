@@ -6,6 +6,8 @@ import appRootDir from 'app-root-dir';
 import config from '../tools/config';
 
 import App from '../shared/App';
+import serviceWorker from './middleware/serviceWorker';
+import offlinePage from './middleware/offlinePage';
 import renderApp from './middleware/renderApp';
 
 const ngrok = process.env.ENABLE_TUNNEL === 'true' ? require('ngrok') : false;
@@ -14,44 +16,30 @@ const { serverPort, host, clientOutputPath, webPath, publicPath } = config;
 
 const app = express();
 
+// ===========================
+//         Middlewares
+// ===========================
+
+// Gzip compress all responses
 app.use(compression());
 
 if (isProd) {
-  app.get('/sw.js', (req, res, next) =>
-    res.sendFile(
-      pathResolve(
-        appRootDir.get(),
-        clientOutputPath,
-        './sw.js'
-      )
-    )
-  );
-
-  app.get(`${webPath}/index.html`, (req, res, next) =>
-    fsReadFile(
-      pathResolve(
-        appRootDir.get(),
-        clientOutputPath,
-        './index.html'
-      ),
-      'utf-8',
-      (err, data) => {
-        if (err) {
-          res.status(500).send('Error returning offline page');
-          return;
-        }
-
-        res.send(data);
-      }
-    )
-  );
+  // Register service worker
+  app.get('/sw.js', serviceWorker);
+  // Serve offline page template
+  app.get(`${webPath}/index.html`, offlinePage);
 }
 
 // Serve ./build/client from /client
 app.use(webPath, express.static(pathResolve(appRootDir.get(), clientOutputPath)));
 // Serve ./public from /
 app.use('/', express.static(pathResolve(appRootDir.get(), './public')));
+// Render the react application
 app.use(renderApp);
+
+// ===========================
+//       HTTP Listener
+// ===========================
 
 const server = app.listen(serverPort, host, (err) => {
   if (err) {
