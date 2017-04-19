@@ -34,6 +34,8 @@ const config = {
     discardComments: { removeAll: process.env.NODE_ENV === 'production' }
   },
 
+  offlinePageName: 'offline.html',
+
 }
 
 export default config;

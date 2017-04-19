@@ -12,7 +12,14 @@ import renderApp from './middleware/renderApp';
 
 const ngrok = process.env.ENABLE_TUNNEL === 'true' ? require('ngrok') : false;
 const isProd = process.env.NODE_ENV === 'production';
-const { serverPort, host, clientOutputPath, webPath, publicPath } = config;
+const {
+  serverPort,
+  host,
+  clientOutputPath,
+  webPath,
+  publicPath,
+  offlinePageName,
+} = config;
 
 const app = express();
 
@@ -27,13 +34,13 @@ if (isProd) {
   // Register service worker
   app.get('/sw.js', serviceWorker);
   // Serve offline page template
-  app.get(`${webPath}/index.html`, offlinePage);
+  app.get(`${webPath}/${offlinePageName}`, offlinePage);
 }
 
 // Serve ./build/client from /client
 app.use(webPath, express.static(pathResolve(appRootDir.get(), clientOutputPath)));
 // Serve ./public from /
-app.use('/', express.static(pathResolve(appRootDir.get(), './public')));
+app.use('/', express.static(pathResolve(appRootDir.get(), publicPath)));
 // Render the react application
 app.use(renderApp);
 

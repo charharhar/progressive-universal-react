@@ -8,7 +8,7 @@ export default function offlinePage(req, res, next) {
     pathResolve(
       appRootDir.get(),
       config.clientOutputPath,
-      './index.html'
+      `./${config.offlinePageName}`
     ),
     'utf-8',
     (err, data) => {

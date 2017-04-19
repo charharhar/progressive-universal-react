@@ -3,10 +3,14 @@ import appRootDir from 'app-root-dir';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import OfflinePlugin from 'offline-plugin';
 
+import config from '../config';
+
+const { offlinePageName, webPath } = config;
+
 export default function serviceWorker(webpackConfig) {
   webpackConfig.plugins.push(
     new HtmlWebpackPlugin({
-      filename: 'index.html',
+      filename: offlinePageName,
       template: `babel-loader!${pathResolve(__dirname, '../helpers/offlinePageTemplate.js')}`,
       production: true,
       minify: {
@@ -29,14 +33,11 @@ export default function serviceWorker(webpackConfig) {
     new OfflinePlugin({
       publicPath: '/client/',
       relativePaths: false,
-      caches: {
-        main: ['index.html', ':rest:'],
-      },
       ServiceWorker: {
         output: 'sw.js',
         events: true,
         publicPath: '/sw.js',
-        navigateFallbackURL: '/client/index.html',
+        navigateFallbackURL: `${webPath}/${offlinePageName}`,
       },
       AppCache: false,
     })
