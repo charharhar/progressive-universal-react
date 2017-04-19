@@ -11,7 +11,7 @@ const cspConfig = {
     objectSrc: ["'self'"],
     mediaSrc: ["'self'"],
     manifestSrc: ["'self'"],
-    srciptSrc: [
+    scriptSrc: [
       "'self'",
       "'unsafe-inline'",
     ],
@@ -23,16 +23,15 @@ const cspConfig = {
   }
 }
 
-if (process.env.NODE_ENV === 'development') {
-  Object.keys(cspConfig.directives).forEach((directive) => {
-    cspConfig.directives[directive].push(
-      `${config.host}:${config.clientPort}`,
-    );
-  })
-}
+// if (process.env.NODE_ENV === 'development') {
+//   Object.keys(cspConfig.directives).forEach((directive) => {
+//     cspConfig.directives[directive].push(
+//       `${config.host}:${config.clientPort}`,
+//     );
+//   });
+// }
 
 const security = [
-  helmet.contentSecurityPolicy(cspConfig),
 
   helmet.xssFilter(),
 
@@ -42,5 +41,9 @@ const security = [
 
   helmet.noSniff(),
 ];
+
+if (process.env.NODE_ENV === 'production') {
+  security.push(helmet.contentSecurityPolicy(cspConfig));
+}
 
 export default security;
