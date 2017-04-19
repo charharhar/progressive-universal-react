@@ -49,6 +49,7 @@ function Html (props) {
           dangerouslySetInnerHTML={{ __html: children }}
           >
         </div>
+        <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
         { vendorDll && <script type="text/javascript" src={vendorDll}></script> }
         { scripts && <script type="text/javascript" src={scripts}></script> }
         { jsonLd && jsonLd }
