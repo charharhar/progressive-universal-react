@@ -32,7 +32,6 @@ const cspConfig = {
 // }
 
 const security = [
-
   helmet.xssFilter(),
 
   helmet.frameguard('deny'),

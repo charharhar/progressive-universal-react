@@ -2,3 +2,4 @@
 /build/
 .happypack
 /tunnel/
+*.log

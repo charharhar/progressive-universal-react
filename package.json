@@ -38,6 +38,7 @@
     "ngrok": "^2.2.6",
     "node-notifier": "^5.1.2",
     "node-sass": "^4.5.2",
+    "pm2": "^2.4.5",
     "postcss-flexbugs-fixes": "^2.1.0",
     "postcss-loader": "^1.3.3",
     "precss": "^1.4.0",
@@ -59,7 +60,8 @@
     "develop": "rimraf build && babel-node tools/scripts/develop",
     "tunnel": "rimraf tunnel && cross-env ENABLE_TUNNEL=true babel-node tools/scripts/build && node tunnel/server",
     "build": "rimraf build && babel-node tools/scripts/build",
-    "start": "node build/server",
-    "prod:start": "npm run build && npm run start"
+    "start": "pm2 start build/server && pm2 logs --json",
+    "prod:start": "npm run build && npm run start",
+    "prod:stop": "pm2 delete all"
   }
 }
