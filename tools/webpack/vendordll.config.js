@@ -1,22 +1,15 @@
 import md5 from 'md5';
 import fs from 'fs';
 import webpack from 'webpack';
-import path from 'path';
+import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import config from '../config';
 import { log } from '../utils';
 
-function createVendorDLL() {
-  const dllConfig = {
-    name: 'vendorDll',
-    include: [
-      'react',
-      'react-dom',
-      'react-router-dom',
-    ],
-  };
+const { clientOutputPath, dllConfig } = config
 
-  const pkg = require(path.resolve(appRootDir.get(), './package.json'));
+function createVendorDLL() {
+  const pkg = require(pathResolve(appRootDir.get(), './package.json'));
   const devDLLDependencies = dllConfig.include.sort();
   const currentDependenciesHash = md5(JSON.stringify(
     devDLLDependencies.map(dep =>
@@ -24,9 +17,9 @@ function createVendorDLL() {
     ),
   ));
 
-  const vendorDLLHashFilePath = path.resolve(
+  const vendorDLLHashFilePath = pathResolve(
     appRootDir.get(),
-    config.clientOutputPath,
+    clientOutputPath,
     `${dllConfig.name}_hash`,
   );
 
@@ -37,15 +30,15 @@ function createVendorDLL() {
         [dllConfig.name]: devDLLDependencies,
       },
       output: {
-        path: path.resolve(appRootDir.get(), config.clientOutputPath),
+        path: pathResolve(appRootDir.get(), clientOutputPath),
         filename: `${dllConfig.name}.js`,
         library: dllConfig.name,
       },
       plugins: [
         new webpack.DllPlugin({
-          path: path.resolve(
+          path: pathResolve(
             appRootDir.get(),
-            config.clientOutputPath,
+            clientOutputPath,
             `./${dllConfig.name}.json`,
           ),
           name: dllConfig.name,

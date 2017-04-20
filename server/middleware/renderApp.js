@@ -1,23 +1,27 @@
 
 import { readFileSync as fsReadFileSync } from 'fs';
 import { resolve as pathResolve } from 'path';
-import React from 'react';
+import React, { Children } from 'react';
 import appRootDir from 'app-root-dir';
 import { StaticRouter } from 'react-router';
 import { renderToString, renderToStaticMarkup } from 'react-dom/server';
 import config from '../../tools/config';
+import { ifElse, removeEmpty } from '../../tools/utils';
 
 import App from '../../shared/App';
 import Html from '../../shared/Html';
 
 const isProd = process.env.NODE_ENV === 'production';
+const ifDev = ifElse(!isProd);
+
 const {
   webPath,
   clientOutputPath,
   title,
   description,
-  serviceWorker,
+  dllConfig,
   jsonLd,
+  clientConfig,
 } = config;
 
 const assetsFilePath = pathResolve(
@@ -27,59 +31,52 @@ const assetsFilePath = pathResolve(
 );
 
 // Helper functions to generate path names
+const KeyedComponent = ({ children }) => Children.only(children);
 
 const readAssetsJSONFile = () => JSON.parse(fsReadFileSync(assetsFilePath, 'utf8'));
 
-const renderScriptPath = (filename) => filename;
+const stylePath = (path) => (
+  isProd
+    ? <link rel="stylesheet" type="text/css" href={path} />
+    : false
+)
 
-const renderCSSPath = (filename) => isProd ? filename : false;
+const scriptPath = (path) =>
+  <script type="text/javascript" src={path} />
 
-const renderDllPath = () => !isProd ? `${webPath}vendorDll.js` : false
-
-const renderJSONLD = (children) => (
+const inlineScript = ({ type = 'text/javascript', children }) => (
   <script
-    type="application/ld+json"
+    type={type}
     dangerouslySetInnerHTML={{__html: children}}
   />
 )
 
-const renderInlineScript = ({ render, key, children }) => ( render ?
-  <script
-    type='text/javascript'
-    dangerouslySetInnerHTML={{
-      __html: `window.${key}=${children}`
-    }}
-  /> : false
-)
-
-const applicationJSONLd = jsonLd;
-
-const clientConfig = {
-  render: isProd,
-  key: '__CLIENT_CONFIG__',
-  children: `{
-    "serviceWorker":{"enabled":true}
-  }`
-}
-
-//
 const renderApp = (req, res) => {
   const context = {}
   const assetsMap = readAssetsJSONFile();
+
   const appString = renderToString(
     <StaticRouter location={req.url} context={context}>
       <App />
     </StaticRouter>
   );
+
+  const scriptElements = removeEmpty([
+    scriptPath('https://cdn.polyfill.io/v2/polyfill.min.js'),
+    ifDev(scriptPath(`${webPath}${dllConfig.name}.js`)),
+    scriptPath(assetsMap.index.js),
+    inlineScript({ type: 'application/ld+json', children: jsonLd }),
+    inlineScript({ children: clientConfig })
+  ]);
+
   const htmlMarkup = renderToStaticMarkup(
     <Html
       title={title}
       description={description}
-      styles={renderCSSPath(assetsMap.index.css)}
-      scripts={renderScriptPath(assetsMap.index.js)}
-      vendorDll={renderDllPath()}
-      jsonLd={renderJSONLD(applicationJSONLd)}
-      inlineScript={renderInlineScript(clientConfig)}
+      styleElements={stylePath(assetsMap.index.css)}
+      scriptElements={scriptElements.map((script, key) =>
+        <KeyedComponent key={key}>{script}</KeyedComponent>
+      )}
     >
       {appString}
     </Html>

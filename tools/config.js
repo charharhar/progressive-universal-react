@@ -26,6 +26,15 @@ const config = {
 
   targetServer: { target: 'server' },
 
+  dllConfig: {
+    name: 'vendorDll',
+    include: [
+      'react',
+      'react-dom',
+      'react-router-dom',
+    ],
+  },
+
   cssLoaderOptions: {
     modules: true,
     importLoaders: 1,
@@ -36,6 +45,7 @@ const config = {
 
   offlinePageName: 'offline.html',
 
+  // Inline Script Elements
   jsonLd: `{
     "@context": "http://schema.org",
     "@type": "Organization",
@@ -46,6 +56,10 @@ const config = {
       "telephone": "+1-401-555-1212",
       "contactType": "customer service"
     }]
+  }`,
+
+  clientConfig: `window.__CLIENT_CONFIG__ = {
+    "serviceWorker":{"enabled":true}
   }`,
 
 }
