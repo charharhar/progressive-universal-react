@@ -1,11 +1,12 @@
-import { resolve as pathResolve } from 'path';
+import { sync as globSync } from 'glob';
+import { resolve as pathResolve, relative as pathRelative } from 'path';
 import appRootDir from 'app-root-dir';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import OfflinePlugin from 'offline-plugin';
 
 import config from '../config';
 
-const { offlinePageName, webPath } = config;
+const { offlinePageName, webPath, publicPath } = config;
 
 export default function serviceWorker(webpackConfig) {
   webpackConfig.plugins.push(
@@ -29,6 +30,23 @@ export default function serviceWorker(webpackConfig) {
     })
   );
 
+  const publicAssets = ['./**/*'].reduce((acc, cur) => {
+    const publicAssetPathGlob = pathResolve(
+      appRootDir.get(), publicPath, cur,
+    );
+
+    const publicFileWebPaths = acc.concat(
+      globSync(publicAssetPathGlob, { nodir: true })
+      .map(publicFile => pathRelative(
+        pathResolve(appRootDir.get(), publicPath),
+        publicFile,
+      ))
+      .map(relativePath => `/${relativePath}`),
+    );
+
+    return publicFileWebPaths;
+  }, [])
+
   webpackConfig.plugins.push(
     new OfflinePlugin({
       publicPath: webPath,
@@ -42,6 +60,7 @@ export default function serviceWorker(webpackConfig) {
       AppCache: false,
       externals: [
         'https://cdn.polyfill.io/v2/polyfill.min.js',
+        ...publicAssets,
       ],
     })
   );

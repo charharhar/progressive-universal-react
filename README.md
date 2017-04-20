@@ -5,27 +5,27 @@
 This is Version 1.0 of my personal starter kit containing most of (what I believe to be atleast) the newest and cutting edge technologies today in web app development.
 
 ## Motive
-The reason for writing this starterkit came from going through countless starter kits on Github, articles on Medium, and video tutorials on Udemy and FrontendMasters. Part of it is a learning process and the other part is to eventually use this starter kit in my future projects.
+The reason for writing this starterkit came from going through countless starter kits on Github, articles on Medium, and video tutorials. Part of it is a learning process (#javascriptfatigue), but the main part is to utilize this starter kit in future projects.
 
 ## Features
 <dl>
   <dt>React with React Router v4</dt>
-  <dd>Has the most bare minimum structure for a React application while using the newest version of React Router. Also supports the most commonly used ES2017 features.</dd>
+  <dd>Has the most bare minimum structure for a React application while using the newest version of React Router. Also supports most ES2017 features.</dd>
 
   <dt>Universal Rendering with Express server</dt>
   <dd>A very basic express server which initially serves a static string template and loads in the client scripts upon page render. Causes FOUC in development environment ONLY.</dd>
 
   <dt>Hot reloading development environment</dt>
-  <dd>Any configuration changes made will be reflected in your development session with hot reloading client and node servers. Also uses React Hot Loader to reflect any changes to components or styles without a page reload.</dd>
+  <dd>Watches for any configuration changes and immediately will be reflected in your live development session with hot reloading client and node servers. Also uses React Hot Loader to reflect any changes to components or styles without a full page reload.</dd>
 
   <dt>Webpack 2 bundling</dt>
-  <dd>Makes use of a lot of webpack 2 plugins and techniques such as treeshaking, HappyPack and vendorDLL packages to significantly improve bundle speeds.</dd>
+  <dd>Makes use of a lot of webpack 2 plugins and techniques such as treeshaking, HappyPack and vendorDLL packages to significantly improve bundle speeds and sizes.</dd>
 
-  <dt>Progressive Web Application support</dt>
-  <dd>Utilizes Service Workers to deliver offline first web applications. Once the SW script is loaded, application will still be available to the user without network connection.</dd>
+  <dt>Progressive Web Application</dt>
+  <dd>Utilizes a Service Worker to deliver offline first web applications. Once the SW script is loaded, the application will still be available to the user without a network connection.</dd>
 
-  <dt>Most basic CSS module and SASS support</dt>
-  <dd>Using CSS modules as the base with SASS goodies and autoprefixing with postcss configurations. FOUC avoided in production bundles with ExtractTextPlugin.</dd>
+  <dt>Basic CSS module and SASS support</dt>
+  <dd>Using CSS modules as the base with SASS syntax goodies and autoprefixing with postcss configurations. FOUC avoided in production bundles with ExtractTextPlugin.</dd>
 
   <dt>SEO support</dt>
   <dd>Strong support of SEO meta tag management to be indexed by google's search engine.</dd>
@@ -34,7 +34,7 @@ The reason for writing this starterkit came from going through countless starter
   <dd>Utilizes Ngrok to set up a secure public URL for demo purposes.</dd>
 
   <dt>NOT included</dt>
-  <dd>ESLinting, Flow coverage, and Redux./</dd>
+  <dd>ESLinting, Flow coverage, and Redux.</dd>
 </dl>
 
 ## Scripts

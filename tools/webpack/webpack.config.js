@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { blue as chalkBlue } from 'chalk';
 import webpack from 'webpack';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
@@ -13,7 +13,7 @@ import config from '../config';
 import { ifElse, removeEmpty } from '../utils';
 
 export default function configFactory({ target, mode }) {
-  console.log(chalk.blue(`==> Creating webpack config for ${target} in ${mode} mode.`));
+  console.log(chalkBlue(`==> Creating webpack config for ${target} in ${mode} mode.`));
 
   const {
     clientOutputPath,

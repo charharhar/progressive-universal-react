@@ -20,7 +20,7 @@ const cspConfig = {
       "'self'",
       "'unsafe-inline'",
       'blob:',
-    ]
+    ],
   }
 }
 

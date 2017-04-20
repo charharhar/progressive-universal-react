@@ -40,7 +40,7 @@ const config = {
     importLoaders: 1,
     localIdentName: '[name]__[local]___[hash:base64:5]',
     minimize: process.env.NODE_ENV === 'production',
-    discardComments: { removeAll: process.env.NODE_ENV === 'production' }
+    discardComments: { removeAll: process.env.NODE_ENV === 'production' },
   },
 
   offlinePageName: 'offline.html',
