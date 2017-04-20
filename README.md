@@ -76,5 +76,18 @@ yarn clear
 ```
 Runs a simple script that removes all output directories.
 
+## Todos
+  - Create .env file for better application configuration such as port, secret keys, DB support (if used).
+  - Add custom support for analytical and social media support such as facebook and google analytics.
+  - Decide on what frameworks to include such as Modernizr, Bootstrap.
+  - Incorporate NONCE values for better CSP configuration in regards to inline scripts.
+  - Hash out and improve on the react application structure.
+  - Redux branch (at some point).
+
+## Additional
+  - Get proper favicon support using http://www.favicon-generator.org/
+  - Update application/json+ld data in /tools/config.js with correct data
+  - Give proper title and description for the application
+
 ## Credits
 Special thanks to https://github.com/ctrlplusb/react-universally. A huge part of this starter kit is inspired by what they have done. Instead of cloning their work, I decided to rewrite my own while using theirs as a reference. Part of it is to learn and understand what is going on while also being able to set up the kit catering to my preferences. In the end, you can almost call this a clone of their starter kit. If you magically stumble across this boiler plate and want to learn more, I strongly suggest looking at their highly commented code instead.
