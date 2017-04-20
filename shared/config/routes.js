@@ -1,8 +1,8 @@
 
 const routes = {
-  home: { path: '/', label: 'home' },
+  home: { path: '/', label: 'Home' },
 
-  about: { path: '/about', label: 'about' },
+  about: { path: '/about', label: 'About' },
 }
 
 export default routes;

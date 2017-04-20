@@ -7,6 +7,7 @@ import nodeExternals from 'webpack-node-externals';
 import AssetsPlugin from 'assets-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
 import ExtractTextPlugin from 'extract-text-webpack-plugin';
+import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 
 import serviceWorker from './serviceWorker.config';
 import config from '../config';
@@ -91,6 +92,12 @@ export default function configFactory({ target, mode }) {
       // [chunkhash] only change when content has change, for long term browser caching
       ifClient(() => new WebpackMd5Hash()),
 
+      ifClient(() =>
+        new LodashModuleReplacementPlugin({
+          collections: true,
+        })
+      ),
+
       // Generates JSON file mapping all output files
       ifClient(() =>
         new AssetsPlugin({
@@ -106,15 +113,17 @@ export default function configFactory({ target, mode }) {
       ifDevClient(() => new webpack.NamedModulesPlugin()),
 
       // Vendor dll reference to the manifest file to improve development rebuilding speeds
-      ifDevClient(() => new webpack.DllReferencePlugin({
-        manifest: require(
-          pathResolve(
-            appRootDir.get(),
-            clientOutputPath,
-            './vendorDll.json',
-          )
-        ),
-      })),
+      ifDevClient(() =>
+        new webpack.DllReferencePlugin({
+          manifest: require(
+            pathResolve(
+              appRootDir.get(),
+              clientOutputPath,
+              './vendorDll.json',
+            )
+          ),
+        })
+      ),
 
       // Extract CSS into CSS files for production build
       ifProd(() =>
@@ -152,6 +161,7 @@ export default function configFactory({ target, mode }) {
           path: 'babel-loader',
           query: {
             babelrc: false,
+            plugins: ['lodash'],
             presets: removeEmpty([
               'react',
               'stage-3',
