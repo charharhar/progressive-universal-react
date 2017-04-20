@@ -1,21 +1,20 @@
+import { values as _values } from 'lodash';
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import styles from './navigation.css'
+import routes from '../../config/routes';
 
-const routes = [
-  { route: '/', label: 'Home' },
-  { route: '/about', label: 'About' },
-]
+const links = _values(routes);
 
 const Navigation = () => (
   <nav>
     <ul className={styles.navlist}>
       {
-        routes.map(link => (
-          <li key={link.route}>
+        links.map(link => (
+          <li key={link.path}>
             <NavLink
               exact
-              to={link.route}
+              to={link.path}
               activeClassName={styles.activeLink}
               >
               {link.label}

@@ -1,20 +1,24 @@
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
+import routes from './config/routes';
 
 import {
   Navigation,
+} from './components';
+
+import {
   Home,
   About,
   ErrorPage
-} from './components';
+} from './routes';
 
 const App = () => (
   <div>
     <Navigation />
     <hr />
     <Switch>
-      <Route exact path="/" component={Home} />
-      <Route path="/about" component={About} />
+      <Route exact path={routes.home.path} component={Home} />
+      <Route path={routes.about.path} component={About} />
       <Route component={ErrorPage} />
     </Switch>
   </div>
