@@ -1,3 +1,4 @@
+import styles from './global.css';
 import React from 'react';
 import { Route, Switch } from 'react-router-dom';
 import routes from './config/routes';
@@ -13,7 +14,7 @@ import {
 } from './routes';
 
 const App = () => (
-  <div>
+  <div className={styles.wrapper}>
     <Navigation />
     <hr />
     <Switch>
