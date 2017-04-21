@@ -41,8 +41,12 @@ const stylePath = (path) => (
     : false
 )
 
-const scriptPath = (path) =>
-  <script type="text/javascript" src={path} />
+const scriptPath = (path) => (
+  <script
+    type="text/javascript"
+    src={path}
+  />
+)
 
 const inlineScript = ({ type = 'text/javascript', children }) => (
   <script

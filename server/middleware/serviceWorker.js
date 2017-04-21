@@ -2,7 +2,7 @@ import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
 import config from '../../tools/config';
 
-export default function servieWorker(req, res, next) {
+export default function serviceWorker(req, res, next) {
   res.sendFile(
     pathResolve(
       appRootDir.get(),
