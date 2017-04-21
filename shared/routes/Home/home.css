@@ -1,5 +1,5 @@
 .homeWrapper {
-  display: flex;
+  width: 100%;
   border: 1px solid #ccc;
 
   .homeHeading {
@@ -8,5 +8,9 @@
 
   .homeHeading:hover {
     color: pink;
+  }
+
+  img {
+    width: 100%;
   }
 }

@@ -5,7 +5,7 @@ import images from '../../config/images';
 const Home = () => (
   <div className={styles.homeWrapper}>
     <h1 className={styles.homeHeading}>Home</h1>
-    <img src={images.logo} />
+    <img src={images.logoSvg} />
   </div>
 )
 

@@ -3,3 +3,4 @@
 .happypack
 /tunnel/
 *.log
+.DS_Store

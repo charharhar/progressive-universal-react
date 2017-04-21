@@ -1,6 +1,7 @@
 
 const images = {
-  logo: '/react-logo.svg',
+  logoSvg: '/images/react-logo.svg',
+  logoPng: '/images/react-logo.png',
 }
 
 export default images;
