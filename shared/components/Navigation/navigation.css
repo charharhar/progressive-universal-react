@@ -2,22 +2,35 @@
 .navlist {
   list-style: none;
 
-  li {
-    display: inline-block;
-    padding: 20px 0;
+  &:before,
+  &:after {
+    content: ' ';
+    display: table;
+  }
 
-    &:hover a {
-      color: limegreen;
-    }
+  &:after {
+    clear: both;
+  }
+
+  li {
+    display: block;
+    float: left;
+    padding: 15px 0;
 
     a {
-      padding: 20px;
+      font-weight: 200;
+      font-size: 18px;
+      padding: 15px;
       text-decoration: none;
       color: black;
+      cursor: pointer;
+
+      &:hover {
+        color: limegreen;
+      }
 
       &.activeLink {
         color: limegreen;
-        font-weight: bold;
       }
     }
   }
