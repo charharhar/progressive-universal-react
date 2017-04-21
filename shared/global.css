@@ -8,7 +8,9 @@ html, body {
   width: 100%;
 }
 
-h1, h2, h3, h4, h5, h6, p, span, strong, figure, figcaption, img {
+h1, h2, h3, h4, h5, h6, p,
+span, strong, em, a, ul, li, ol,
+figure, figcaption, img, div {
   margin: 0;
   padding: 0;
 }

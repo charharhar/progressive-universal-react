@@ -19,7 +19,6 @@ export default class App extends React.Component {
     return (
       <div className={styles.wrapper}>
         <Navigation links={_values(routes)} />
-        <hr />
         <Switch>
           <Route exact path={routes.home.path} component={Home} />
           <Route path={routes.about.path} component={About} />
