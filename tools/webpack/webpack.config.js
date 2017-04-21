@@ -92,6 +92,7 @@ export default function configFactory({ target, mode }) {
       // [chunkhash] only change when content has change, for long term browser caching
       ifClient(() => new WebpackMd5Hash()),
 
+      // Only include what we use, instead of the entire lodash module
       ifClient(() =>
         new LodashModuleReplacementPlugin({
           collections: true,
@@ -103,7 +104,7 @@ export default function configFactory({ target, mode }) {
         new AssetsPlugin({
           filename: 'assets.json',
           path: pathResolve(appRootDir.get(), clientOutputPath),
-        }),
+        })
       ),
 
       // Enable hot module replacement plugin
@@ -130,7 +131,7 @@ export default function configFactory({ target, mode }) {
         new ExtractTextPlugin({
           filename: '[name]-[chunkhash].css',
           allChunks: true,
-        }),
+        })
       ),
 
       // Minify JS for production build

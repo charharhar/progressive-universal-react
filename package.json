@@ -64,7 +64,7 @@
     "tunnel": "rimraf tunnel && cross-env ENABLE_TUNNEL=true babel-node tools/scripts/build && node tunnel/server",
     "build": "rimraf build && babel-node tools/scripts/build",
     "start": "pm2 start build/server && pm2 logs --json",
-    "prod:start": "npm run build && npm run start",
-    "prod:stop": "pm2 delete all"
+    "stop": "pm2 delete all",
+    "prod:start": "npm run build && npm run start"
   }
 }

@@ -1,5 +1,5 @@
-import { values as _values } from 'lodash';
 import React from 'react';
+import { values as _values } from 'lodash';
 import { NavLink } from 'react-router-dom';
 import styles from './navigation.css'
 import routes from '../../config/routes';
@@ -16,7 +16,7 @@ const Navigation = () => (
               exact
               to={link.path}
               activeClassName={styles.activeLink}
-              >
+            >
               {link.label}
             </NavLink>
           </li>
