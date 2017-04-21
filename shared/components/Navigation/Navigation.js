@@ -1,29 +1,30 @@
 import React from 'react';
-import { values as _values } from 'lodash';
 import { NavLink } from 'react-router-dom';
 import styles from './navigation.css'
-import routes from '../../config/routes';
 
-const links = _values(routes);
+export default class Navigation extends React.Component {
 
-const Navigation = () => (
-  <nav>
-    <ul className={styles.navlist}>
-      {
-        links.map(link => (
-          <li key={link.path}>
-            <NavLink
-              exact
-              to={link.path}
-              activeClassName={styles.activeLink}
-            >
-              {link.label}
-            </NavLink>
-          </li>
-        ))
-      }
-    </ul>
-  </nav>
-)
+  render() {
+    const { links } = this.props;
 
-export default Navigation;
+    return (
+      <nav>
+        <ul className={styles.navlist}>
+          {
+            links.map(link => (
+              <li key={link.path}>
+                <NavLink
+                  exact
+                  to={link.path}
+                  activeClassName={styles.activeLink}
+                >
+                  {link.label}
+                </NavLink>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    );
+  }
+}
