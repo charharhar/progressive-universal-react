@@ -9,7 +9,7 @@ export default class Navigation extends React.Component {
 
     return (
       <nav>
-        <ul className={styles.navlist}>
+        <ul className={`container ${styles.navlist}`}>
           {
             links.map(link => (
               <li key={link.path}>

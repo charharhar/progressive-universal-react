@@ -8,8 +8,10 @@ export default class Home extends React.Component {
   render() {
     return (
       <div className={styles.homeWrapper}>
-        <h1 className={styles.homeHeading}>Home</h1>
-        <Image src={images.logoSvg} />
+        <div className={`container`}>
+          <h1 className={styles.homeHeading}>Home</h1>
+          <Image src={images.logoSvg} />
+        </div>
       </div>
     );
   }

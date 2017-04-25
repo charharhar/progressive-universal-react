@@ -1,15 +1,13 @@
 /*
  *     Variables
  */
+@import './grid.css';
 
 $major-color: #800000;
 $minor-color: #0A82CC;
 $font-color: #222;
 
 $font-stack: Helvetica, sans-serif;
-
-
-
 
 *, *:before, *:after {
   box-sizing: border-box;
