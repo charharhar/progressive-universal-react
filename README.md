@@ -45,9 +45,9 @@ git clone https://github.com/charharhar/progressive-universal-react.git
 cd progressive-universal-react
 yarn
 ```
-Clones this repository into your local directory
-Navigate into the cloned directory
-Install all the application's dependencies
+Clones this repository into your local directory <br />
+Navigate into the cloned directory <br />
+Install all the application's dependencies <br />
 
 ```bash
 yarn develop
@@ -96,19 +96,19 @@ Runs a simple script that removes all output directories (/build/ and /tunnel/).
   - Redux branch (at some point...).
 
 ## Project Structure
-  - [client](/client/) -- Entry point for the client bundle. This is where the application is imported into and wrapped with the Router and Hot Reloader. Offline service worker is installed here at the end.
-  - [public](/public/) -- Contains all the public assets such as images, favicons, and manifest file.
-  - [server](/server/) -- Entry point for the server bundle. Includes some middlewares such as security, serving files from correct paths, rendering the template string and also creating the HTTP server.
+  - [client](/client/) -- Entry point for the client bundle. This is where the application is imported into and wrapped with the Router and Hot Reloader. Offline service worker is registered here at the bottom of the script.
+  - [public](/public/) -- Contains all the public assets such as images, favicons, and manifest.json file.
+  - [server](/server/) -- Entry point for the server bundle. Includes some middlewares such as security, static path declaration, composing the application template string and also creating the HTTP server.
   - [shared](/shared/) -- This is where most of the application code exists. Everything from reusable components to routes exist in this directory.
-    - [components](/shared/components/) -- All the reusable components that will be used throughout the application. Each component is separated into its own directory with modularized style sheets. Index.js is an extra step in importing and exporting components but makes everything more organized.
+    - [components](/shared/components/) -- All the reusable components that will be used throughout the application. Each component is separated into its own directory with modularized style sheets. At the root there is a ./index.js file - it is an extra step to export your components but keeps your code organized and import statements shorter.
     - [config](/shared/config/) -- Extract all static strings such as image paths and route names to variables to be exported and used in the components.
     - [routes](/shared/routes/) -- Each "route" or "scene" or "screen" in this directory makes up for the component that will be rendered in each matching path.
   - [tools](/tools/) -- Primary configuration center for the entire application. 
-    - There is a central configuration object which is imported and used throughout the app. Most of the applications namespace is managed here.
-    - Utility function that provides some simple methods to make life easier
-    - [webpack](/tools/webpack/) -- Inside exists a configuration factory that outputs the correct bundle depending on the parameters passed inside. VendorDll config and Service Worker configuration also exists here.
+    - There is a central configuration object which is exported from ./config.js and used throughout the app. Most of the applications namespace is managed here.
+    - Utility functions exported from ./utils.js that provides some simple methods to make life easier during configuration.
+    - [webpack](/tools/webpack/) -- Inside exists a configuration factory that outputs the correct bundle depending on the parameters passed to it. VendorDll config for faster development rebundling speeds. Service Worker configuration for production for awesome progressive web app support.
     - [scripts](/tools/scripts/) -- Using npm scripts as a task manager, all of the scripting commands are extracted into their own file.
-      - [develop](/tools/scripts/develop/) -- Hot development servers created here using chokidar to watch for changes in the /tools/ directory. Client server built with express and webpack middlewares. Node server spawned with child_process.
+      - [develop](/tools/scripts/develop/) -- Hot development servers created here using chokidar to watch for changes made to any file in the /tools/ directory. Client server built with express and webpack middlewares. Node server spawned with child_process.
 
 ## Additional
   - Get proper favicon support using http://www.favicon-generator.org/
