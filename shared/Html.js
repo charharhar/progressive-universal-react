@@ -19,6 +19,7 @@ function Html (props) {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#222222" />
+        <meta name="msapplication-TileColor" content="#222222" />
 
         <meta property="fb:app_id" content="" />
         <meta property="og:title" content={title} />

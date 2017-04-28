@@ -1,7 +1,8 @@
 import React from 'react';
 import { values as _values } from 'lodash';
-import styles from './global.css';
 import { Route, Switch } from 'react-router-dom';
+
+import styles from './global.css';
 import routes from './config/routes';
 
 import {
