@@ -38,12 +38,12 @@ The reason for building this starterkit came from going through countless starte
 </dl>
 
 ## Scripts
-  - Task and dependency management is run with yarn (https://yarnpkg.com/en/docs/install). IF you do not wish to use yarn, feel free to use npm instead.
+  - Task and dependency management is run with yarn (https://yarnpkg.com/en/docs/install). IF you do not wish to use yarn, feel free to use npm instead. There will be no difference in the end product using either tool. Replace all "yarn" commands below with the appropriate npm command "npm run" or "npm install".
 
 ```bash
 git clone https://github.com/charharhar/progressive-universal-react.git
 cd progressive-universal-react
-yarn
+yarn || npm install
 ```
 Clones this repository into your local directory <br />
 Navigate into the cloned directory <br />
