@@ -8,15 +8,13 @@ const config = {
 
   clientPort: 7000,
 
+  clientOutputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/client' : './build/client'}`,
+
   serverPort: `${process.env.ENABLE_TUNNEL === 'true' ? 1337 : 3000}`,
 
   webPath: '/client/',
 
   publicPath: './public',
-
-  clientOutputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/client' : './build/client'}`,
-
-  serverOutputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/server' : './build/server'}`,
 
   configDevelop: { mode: 'development' },
 
@@ -25,6 +23,28 @@ const config = {
   targetClient: { target: 'client' },
 
   targetServer: { target: 'server' },
+
+  bundles: {
+    client: {
+      entryPath: './client/index.js',
+      srcPaths: [
+        './client',
+        './shared',
+        './config',
+      ],
+      outputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/client' : './build/client'}`,
+    },
+
+    server: {
+      entryPath: './server/index.js',
+      srcPaths: [
+        './server',
+        './shared',
+        './config',
+      ],
+      outputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/server' : './build/server'}`,
+    }
+  },
 
   dllConfig: {
     name: 'vendorDll',

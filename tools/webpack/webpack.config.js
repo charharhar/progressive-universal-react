@@ -17,9 +17,8 @@ export default function configFactory({ target, mode }) {
   console.log(chalkBlue(`==> Creating webpack config for ${target} in ${mode} mode.`));
 
   const {
-    clientOutputPath,
-    serverOutputPath,
     host,
+    bundles,
     clientPort,
     cssLoaderOptions,
   } = config;
@@ -27,7 +26,8 @@ export default function configFactory({ target, mode }) {
   const isDev = mode === 'development';
   const isProd = mode === 'production';
   const isClient = target === 'client';
-  const isNode = target === 'server';
+  const isServer = target === 'server';
+  const isNode = !isClient;
 
   const ifDev = ifElse(isDev);
   const ifProd = ifElse(isProd);
@@ -36,6 +36,8 @@ export default function configFactory({ target, mode }) {
   const ifDevNode = ifElse(isDev && isNode);
   const ifDevClient = ifElse(isDev && isClient);
   const ifProdClient = ifElse(isProd && isClient);
+
+  const bundleConfig = bundles[target];
 
   let webpackConfig = {
     target: isClient ? 'web' : 'node',
@@ -46,7 +48,7 @@ export default function configFactory({ target, mode }) {
     },
 
     externals: removeEmpty([
-      ifNode(() => nodeExternals())
+      ifNode(() => nodeExternals()),
     ]),
 
     devtool: isProd ? 'hidden-source-map' : 'source-map',
@@ -57,18 +59,12 @@ export default function configFactory({ target, mode }) {
       index: removeEmpty([
         ifDevClient('react-hot-loader/patch'),
         ifDevClient(`webpack-hot-middleware/client?reload=true&path=http://${host}:${clientPort}/__webpack_hmr`),
-        ifClient(
-          pathResolve(appRootDir.get(), './client/index'),
-          pathResolve(appRootDir.get(), './server/index')
-        ),
+        pathResolve(appRootDir.get(), bundleConfig.entryPath),
       ]),
     },
 
     output: {
-      path: ifClient(
-        pathResolve(appRootDir.get(), clientOutputPath),
-        pathResolve(appRootDir.get(), serverOutputPath)
-      ),
+      path: pathResolve(appRootDir.get(), bundleConfig.outputPath),
       filename: ifProdClient('[name]-[chunkhash].js', '[name].js'),
       chunkFilename: '[name]-[chunkhash].js',
       publicPath: ifDev(`http://${host}:${clientPort}/client/`, '/client/'),
@@ -103,7 +99,7 @@ export default function configFactory({ target, mode }) {
       ifClient(() =>
         new AssetsPlugin({
           filename: 'assets.json',
-          path: pathResolve(appRootDir.get(), clientOutputPath),
+          path: pathResolve(appRootDir.get(), bundleConfig.outputPath),
         })
       ),
 
@@ -119,7 +115,7 @@ export default function configFactory({ target, mode }) {
           manifest: require(
             pathResolve(
               appRootDir.get(),
-              clientOutputPath,
+              bundleConfig.outputPath,
               './vendorDll.json',
             )
           ),
@@ -206,13 +202,12 @@ export default function configFactory({ target, mode }) {
           exclude: '/node_modules/',
           loader: 'happypack/loader?id=happypack-javascript',
           include: removeEmpty([
-            ifNode(pathResolve(appRootDir.get(), './server')),
-            ifClient(pathResolve(appRootDir.get(), './client')),
-            pathResolve(appRootDir.get(), './shared'),
-            pathResolve(appRootDir.get(), './tools/config'),
+            ...bundleConfig.srcPaths.map(srcPath =>
+              pathResolve(appRootDir.get(), srcPath),
+            ),
           ]),
         },
-        {
+        ifElse(isClient || isServer)(() => ({
           test: /\.css$/,
           rules: removeEmpty([
             ifProd({
@@ -240,7 +235,7 @@ export default function configFactory({ target, mode }) {
               options: cssLoaderOptions,
             }),
           ])
-        },
+        })),
         {
           test: /\.json$/,
           loader: 'json-loader',
@@ -250,14 +245,6 @@ export default function configFactory({ target, mode }) {
           loader: 'file-loader',
           query: {
             name: ifDev('[path][name].[ext]?[hash:8]', '[hash:8].[ext]'),
-          },
-        },
-        {
-          test: /\.(mp4|webm|wav|mp3|m4a|aac|oga)(\?.*)?$/,
-          loader: 'url-loader',
-          query: {
-            name: ifDev('[path][name].[ext]?[hash:8]', '[hash:8].[ext]'),
-            limit: 10000,
           },
         },
       ]
