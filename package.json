@@ -57,7 +57,7 @@
     "webpack-node-externals": "^1.5.4"
   },
   "scripts": {
-    "clear": "babel-node tools/scripts/clean",
+    "clear": "babel-node tools/scripts/clear",
     "analyze:client": "babel-node tools/scripts/analyze --client",
     "analyze:server": "babel-node tools/scripts/analyze --server",
     "develop": "rimraf build && babel-node tools/scripts/develop",
