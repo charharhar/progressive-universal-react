@@ -3,11 +3,10 @@ import webpack from 'webpack';
 import configFactory from '../webpack/webpack.config';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 import { log } from '../utils'
-import config from '../config';
 
-const { configProduction, targetClient, targetServer } = config;
-const targetBundle = process.argv.includes('--client') ? targetClient : targetServer;
-const configObject = Object.assign({}, configProduction, targetBundle);
+const targetBundle = process.argv.includes('--client') ? 'client' : 'server';
+const configObject = { target: targetBundle, mode: 'production' };
+
 const webpackConfig = configFactory(configObject);
 
 webpackConfig.plugins.push(
@@ -33,6 +32,8 @@ compiler.run((err, stats) => {
   if (err) {
     console.error(err);
   } else {
+    console.log(stats.toString({ colors: true }));
+
     log({
       title: 'Analyzer',
       message: 'Running Webpack Bundle Analyzer',
