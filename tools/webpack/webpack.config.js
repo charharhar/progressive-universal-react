@@ -19,6 +19,7 @@ export default function configFactory({ target, mode }) {
   const {
     host,
     bundles,
+    webPath,
     clientPort,
     cssLoaderOptions,
   } = config;
@@ -67,7 +68,7 @@ export default function configFactory({ target, mode }) {
       path: pathResolve(appRootDir.get(), bundleConfig.outputPath),
       filename: ifProdClient('[name]-[chunkhash].js', '[name].js'),
       chunkFilename: '[name]-[chunkhash].js',
-      publicPath: ifDev(`http://${host}:${clientPort}/client/`, '/client/'),
+      publicPath: ifDev(`http://${host}:${clientPort}${webPath}`, webPath),
       libraryTarget: ifNode('commonjs2', 'var'),
     },
 

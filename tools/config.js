@@ -16,14 +16,6 @@ const config = {
 
   publicPath: './public',
 
-  configDevelop: { mode: 'development' },
-
-  configProduction: { mode: 'production' },
-
-  targetClient: { target: 'client' },
-
-  targetServer: { target: 'server' },
-
   bundles: {
     client: {
       entryPath: './client/index.js',
@@ -44,6 +36,18 @@ const config = {
       ],
       outputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/server' : './build/server'}`,
     }
+  },
+
+  additionalNodeBundles: {
+    // apiServer: {
+    //   srcEntryFile: './api/index.js',
+    //   srcPaths: [
+    //     './api',
+    //     './shared',
+    //     './config',
+    //   ],
+    //   outputPath: `${process.env.ENABLE_TUNNEL === 'true' ? './tunnel/api' : './build/api'}`
+    // }
   },
 
   dllConfig: {

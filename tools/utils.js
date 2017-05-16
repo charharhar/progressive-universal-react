@@ -23,10 +23,6 @@ export function log (options) {
   }
 }
 
-export function createConfigObject (mode, target) {
-  return Object.assign({}, mode, target);
-}
-
 export function removeEmpty (x) {
   return x.filter(y => y != null);
 }

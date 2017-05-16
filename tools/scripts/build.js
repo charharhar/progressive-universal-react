@@ -4,12 +4,14 @@ import configFactory from '../webpack/webpack.config';
 import { createConfigObject, log } from '../utils';
 import config from '../config';
 
-const { configProduction, targetClient, targetServer } = config;
-const configBundles = [
-  createConfigObject(configProduction, targetClient),
-  createConfigObject(configProduction, targetServer)
-].forEach(config => {
-    const compiler = webpack(configFactory(config));
+const { bundles, additionalNodeBundles } = config;
+
+const configBundles = Object.keys(bundles)
+  .concat(Object.keys(additionalNodeBundles))
+  .forEach(bundleName => {
+    const compiler = webpack(
+      configFactory({ target: bundleName, mode: 'production' })
+    );
 
     compiler.run((err, stats) => {
       if (err) {
