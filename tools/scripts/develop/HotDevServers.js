@@ -66,9 +66,7 @@ class HotDevServers {
 
   dispose() {
     const safeDisposer = server => (
-      server
-        ? server.dispose()
-        : Promise.resolve()
+      server ? server.dispose() : Promise.resolve()
     );
 
     return safeDisposer(this.hotClientServer)
