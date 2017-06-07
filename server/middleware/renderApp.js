@@ -13,15 +13,17 @@ import Html from '../../shared/Html';
 
 const isProd = process.env.NODE_ENV === 'production';
 const ifDev = ifElse(!isProd);
+const ifProd = ifElse(isProd);
 
 const {
-  webPath,
-  clientOutputPath,
   title,
   description,
   dllConfig,
-  jsonLd,
   clientConfig,
+  webPath,
+  jsonLd,
+  cdnAssets,
+  clientOutputPath,
 } = config;
 
 const assetsFilePath = pathResolve(
@@ -35,26 +37,15 @@ const KeyedComponent = ({ children }) => Children.only(children);
 
 const readAssetsJSONFile = () => JSON.parse(fsReadFileSync(assetsFilePath, 'utf8'));
 
-const stylePath = (path) => (
-  isProd
-    ? <link rel="stylesheet" type="text/css" href={path} />
-    : false
-)
+const stylePath = (path) => <link href={path} type="text/css" rel="stylesheet" />
 
-const scriptPath = (path) => (
-  <script
-    type="text/javascript"
-    src={path}
-  />
-)
+const scriptPath = (path) => <script src={path} type="text/javascript" />
 
-const inlineScript = ({ type = 'text/javascript', children }) => (
-  <script
-    type={type}
-    dangerouslySetInnerHTML={{__html: children}}
-  />
-)
+const inlineScript = ({ type = 'text/javascript', children }) =>
+  <script type={type} dangerouslySetInnerHTML={{__html: children}} />
 
+
+// RenderApp Main function
 const renderApp = (req, res) => {
   const context = {}
   const assetsMap = readAssetsJSONFile();
@@ -65,19 +56,26 @@ const renderApp = (req, res) => {
     </StaticRouter>
   );
 
-  const scriptElements = removeEmpty([
-    scriptPath('https://cdn.polyfill.io/v2/polyfill.min.js'),
-    ifDev(scriptPath(`${webPath}${dllConfig.name}.js`)),
-    scriptPath(assetsMap.index.js),
-    inlineScript({ type: 'application/ld+json', children: jsonLd }),
-    inlineScript({ children: clientConfig })
-  ]);
+  const styleElements = cdnAssets.css.map(ref => stylePath(ref))
+    .concat(removeEmpty([
+      ifProd(stylePath(assetsMap.index.css)),
+    ]))
+
+  const scriptElements = cdnAssets.js.map(ref => scriptPath(ref))
+    .concat(removeEmpty([
+      ifDev(scriptPath(`${webPath}${dllConfig.name}.js`)),
+      scriptPath(assetsMap.index.js),
+      inlineScript({ type: 'application/ld+json', children: jsonLd }),
+      inlineScript({ children: clientConfig })
+    ]))
 
   const htmlMarkup = renderToStaticMarkup(
     <Html
       title={title}
       description={description}
-      styleElements={stylePath(assetsMap.index.css)}
+      styleElements={styleElements.map((style, key) =>
+        <KeyedComponent key={key}>{style}</KeyedComponent>
+      )}
       scriptElements={scriptElements.map((script, key) =>
         <KeyedComponent key={key}>{script}</KeyedComponent>
       )}

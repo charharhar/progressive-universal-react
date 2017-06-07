@@ -59,6 +59,15 @@ const config = {
     ],
   },
 
+  cdnAssets: {
+    js: [
+      'https://cdn.polyfill.io/v2/polyfill.min.js',
+    ],
+    css: [
+      'https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css',
+    ],
+  },
+
   cssLoaderOptions: (mode) => ({
     modules: true,
     importLoaders: 1,

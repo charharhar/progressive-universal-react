@@ -6,7 +6,12 @@ import OfflinePlugin from 'offline-plugin';
 
 import config from '../config';
 
-const { offlinePageName, webPath, publicPath } = config;
+const {
+  offlinePageName,
+  webPath,
+  publicPath,
+  cdnAssets,
+} = config;
 
 export default function serviceWorker(webpackConfig) {
   webpackConfig.plugins.push(
@@ -59,7 +64,8 @@ export default function serviceWorker(webpackConfig) {
       },
       AppCache: false,
       externals: [
-        'https://cdn.polyfill.io/v2/polyfill.min.js',
+        ...cdnAssets.js,
+        ...cdnAssets.css,
         ...publicAssets,
       ],
     })

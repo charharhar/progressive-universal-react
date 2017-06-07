@@ -1,13 +1,18 @@
 import helmet from 'helmet';
 import config from '../../tools/config';
 
+const { cdnAssets } = config;
+
 const cspConfig = {
   directives: {
     childSrc: ["'self'"],
     connectSrc: ['*'],
     defaultSrc: ["'self'"],
     imgSrc: ["'self'"],
-    fontSrc: ["'self'"],
+    fontSrc: [
+      "'self'",
+      'https://maxcdn.bootstrapcdn.com',
+    ],
     objectSrc: ["'self'"],
     mediaSrc: ["'self'"],
     manifestSrc: ["'self'"],
@@ -20,6 +25,7 @@ const cspConfig = {
       "'self'",
       "'unsafe-inline'",
       'blob:',
+      'https://maxcdn.bootstrapcdn.com',
     ],
   }
 }
