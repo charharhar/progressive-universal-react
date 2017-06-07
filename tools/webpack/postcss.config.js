@@ -1,9 +1,9 @@
 
 module.exports = {
-  plugins: [
+  plugins: {
     // Autoprefixer for cross browser CSS support
-    require('autoprefixer'),
+    'autoprefixer': {},
     // Include SASS like support in CSS files
-    require('precss'),
-  ]
+    'precss': {},
+  }
 }

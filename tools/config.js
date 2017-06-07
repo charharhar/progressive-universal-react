@@ -59,13 +59,21 @@ const config = {
     ],
   },
 
-  cssLoaderOptions: {
+  cssLoaderOptions: (mode) => ({
     modules: true,
     importLoaders: 1,
     localIdentName: '[name]__[local]___[hash:base64:5]',
-    minimize: process.env.NODE_ENV === 'production',
-    discardComments: { removeAll: process.env.NODE_ENV === 'production' },
-  },
+    minimize: mode === 'production',
+    discardComments: { removeAll: mode === 'production' },
+    sourceMap: mode === 'development',
+  }),
+
+  postCssLoaderOptions: (mode) => ({
+    sourceMap: mode === 'development',
+    config: {
+      path: './tools/webpack/postcss.config.js',
+    }
+  }),
 
   offlinePageName: 'offline.html',
 

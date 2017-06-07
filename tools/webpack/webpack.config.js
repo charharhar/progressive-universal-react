@@ -22,6 +22,7 @@ export default function configFactory({ target, mode }) {
     webPath,
     clientPort,
     cssLoaderOptions,
+    postCssLoaderOptions,
   } = config;
 
   const isDev = mode === 'development';
@@ -74,13 +75,14 @@ export default function configFactory({ target, mode }) {
 
     resolve: {
       extensions: ['.js'],
+      modules: ['node_modules'],
     },
 
     plugins: removeEmpty([
       // Define some process variables
-      new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(mode),
-        'process.env.ENABLE_TUNNEL': JSON.stringify(process.env.ENABLE_TUNNEL),
+      new webpack.EnvironmentPlugin({
+        NODE_ENV: JSON.stringify(mode),
+        ENABLE_TUNNEL: JSON.stringify(process.env.ENABLE_TUNNEL),
       }),
 
       // No errors during development to prevent crashing
@@ -180,13 +182,17 @@ export default function configFactory({ target, mode }) {
           loaders: [
             'style-loader',
             {
-              path: 'css-loader',
-              query: cssLoaderOptions,
+              loader: 'css-loader',
+              options: cssLoaderOptions(mode),
             },
             {
               loader: 'postcss-loader',
-              query: {
-                config: './tools/webpack/postcss.config.js',
+              options: postCssLoaderOptions(mode),
+            },
+            {
+              loader: 'sass-loader',
+              options: {
+                sourceMap: true,
               },
             },
           ],
@@ -210,20 +216,22 @@ export default function configFactory({ target, mode }) {
         },
         ifElse(isClient || isServer)(() => ({
           test: /\.css$/,
+          exclude: '/node_modules/',
           rules: removeEmpty([
             ifProd({
               loader: ExtractTextPlugin.extract({
                 use: [
                   {
                     loader: 'css-loader',
-                    options: cssLoaderOptions,
+                    options: cssLoaderOptions(mode),
                   },
                   {
                     loader: 'postcss-loader',
-                    options: {
-                      config: './tools/webpack/postcss.config.js',
-                    }
-                  }
+                    options: postCssLoaderOptions(mode),
+                  },
+                  {
+                    loader: 'sass-loader',
+                  },
                 ],
                 fallback: 'style-loader',
               })
@@ -233,7 +241,7 @@ export default function configFactory({ target, mode }) {
             }),
             ifDevNode({
               loader: 'css-loader/locals',
-              options: cssLoaderOptions,
+              options: cssLoaderOptions(mode),
             }),
           ])
         })),
