@@ -81,7 +81,7 @@ export default function configFactory({ target, mode }) {
     plugins: removeEmpty([
       // Define some process variables
       new webpack.EnvironmentPlugin({
-        NODE_ENV: JSON.stringify(mode),
+        NODE_ENV: mode,
         ENABLE_TUNNEL: JSON.stringify(process.env.ENABLE_TUNNEL) || 'false',
       }),
 
