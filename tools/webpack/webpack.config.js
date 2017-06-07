@@ -82,7 +82,7 @@ export default function configFactory({ target, mode }) {
       // Define some process variables
       new webpack.EnvironmentPlugin({
         NODE_ENV: JSON.stringify(mode),
-        ENABLE_TUNNEL: JSON.stringify(process.env.ENABLE_TUNNEL),
+        ENABLE_TUNNEL: JSON.stringify(process.env.ENABLE_TUNNEL) || 'false',
       }),
 
       // No errors during development to prevent crashing
