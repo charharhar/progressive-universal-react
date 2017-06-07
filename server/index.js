@@ -13,12 +13,12 @@ import renderApp from './middleware/renderApp';
 const ngrok = process.env.ENABLE_TUNNEL === 'true' ? require('ngrok') : false;
 const isProd = process.env.NODE_ENV === 'production';
 const {
-  serverPort,
   host,
-  clientOutputPath,
   webPath,
   publicPath,
+  serverPort,
   offlinePageName,
+  clientOutputPath,
 } = config;
 
 const app = express();

@@ -7,10 +7,10 @@ import OfflinePlugin from 'offline-plugin';
 import config from '../config';
 
 const {
-  offlinePageName,
   webPath,
-  publicPath,
   cdnAssets,
+  publicPath,
+  offlinePageName,
 } = config;
 
 export default function serviceWorker(webpackConfig) {

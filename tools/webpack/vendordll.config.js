@@ -6,7 +6,10 @@ import appRootDir from 'app-root-dir';
 import config from '../config';
 import { log } from '../utils';
 
-const { clientOutputPath, dllConfig } = config
+const {
+  dllConfig,
+  clientOutputPath,
+} = config
 
 function createVendorDLL() {
   const pkg = require(pathResolve(appRootDir.get(), './package.json'));
