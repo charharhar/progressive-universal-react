@@ -33,3 +33,10 @@ export function ifElse (condition) {
     return condition ? execIfFunc(then) : (or);
   }
 }
+
+export function generateLoader (loader, options) {
+  return {
+    loader,
+    options
+  }
+}

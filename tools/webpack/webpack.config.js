@@ -2,7 +2,6 @@ import { blue as chalkBlue } from 'chalk';
 import webpack from 'webpack';
 import { resolve as pathResolve } from 'path';
 import appRootDir from 'app-root-dir';
-import HappyPack from 'happypack';
 import nodeExternals from 'webpack-node-externals';
 import AssetsPlugin from 'assets-webpack-plugin';
 import WebpackMd5Hash from 'webpack-md5-hash';
@@ -11,7 +10,11 @@ import LodashModuleReplacementPlugin from 'lodash-webpack-plugin';
 
 import serviceWorker from './serviceWorker.config';
 import config from '../config';
-import { ifElse, removeEmpty } from '../utils';
+import {
+  ifElse,
+  removeEmpty,
+  generateLoader,
+} from '../utils';
 
 export default function configFactory({ target, mode }) {
   console.log(chalkBlue(`==> Creating webpack config for ${target} in ${mode} mode.`));
@@ -89,8 +92,8 @@ export default function configFactory({ target, mode }) {
       // No errors during development to prevent crashing
       ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
 
-      // [chunkhash] only change when content has change
-      // for long term browser caching
+      // [chunkhash] only change when content
+      // has change for long term browser caching
       ifClient(() => new WebpackMd5Hash()),
 
       // Only include what we use,
@@ -169,7 +172,7 @@ export default function configFactory({ target, mode }) {
             'cache-loader',
             {
               loader: 'babel-loader',
-              query: {
+              options: {
                 babelrc: false,
                 plugins: ['lodash'],
                 presets: removeEmpty([
@@ -196,18 +199,9 @@ export default function configFactory({ target, mode }) {
             ifProd({
               loader: ExtractTextPlugin.extract({
                 use: [
-                  {
-                    loader: 'css-loader',
-                    options: cssLoaderOptions(mode),
-                  },
-                  {
-                    loader: 'postcss-loader',
-                    options: postCssLoaderOptions(mode),
-                  },
-                  {
-                    loader: 'sass-loader',
-                    options: sassLoaderOptions(mode),
-                  },
+                  generateLoader('css-loader', cssLoaderOptions(mode)),
+                  generateLoader('postcss-loader', postCssLoaderOptions(mode)),
+                  generateLoader('sass-loader', sassLoaderOptions(mode)),
                 ],
                 fallback: 'style-loader',
               })
@@ -216,18 +210,9 @@ export default function configFactory({ target, mode }) {
               use: [
                 'cache-loader',
                 'style-loader',
-                {
-                  loader: 'css-loader',
-                  options: cssLoaderOptions(mode),
-                },
-                {
-                  loader: 'postcss-loader',
-                  options: postCssLoaderOptions(mode),
-                },
-                {
-                  loader: 'sass-loader',
-                  options: sassLoaderOptions(mode),
-                },
+                generateLoader('css-loader', cssLoaderOptions(mode)),
+                generateLoader('postcss-loader', postCssLoaderOptions(mode)),
+                generateLoader('sass-loader', sassLoaderOptions(mode)),
               ],
             }),
             ifDevNode({
