@@ -35,11 +35,11 @@ const assetsFilePath = pathResolve(
 // Helper functions to generate path names
 const KeyedComponent = ({ children }) => Children.only(children);
 
-const readAssetsJSONFile = () => JSON.parse(fsReadFileSync(assetsFilePath, 'utf8'));
+const stylePath = (path) =>
+  <link href={path} type="text/css" rel="stylesheet" />
 
-const stylePath = (path) => <link href={path} type="text/css" rel="stylesheet" />
-
-const scriptPath = (path) => <script src={path} type="text/javascript" />
+const scriptPath = (path) =>
+  <script src={path} type="text/javascript" />
 
 const inlineScript = ({ type = 'text/javascript', children }) =>
   <script type={type} dangerouslySetInnerHTML={{__html: children}} />
@@ -48,7 +48,7 @@ const inlineScript = ({ type = 'text/javascript', children }) =>
 // RenderApp Main function
 const renderApp = (req, res) => {
   const context = {}
-  const assetsMap = readAssetsJSONFile();
+  const assetsMap = JSON.parse(fsReadFileSync(assetsFilePath, 'utf8'));
 
   const appString = renderToString(
     <StaticRouter location={req.url} context={context}>
