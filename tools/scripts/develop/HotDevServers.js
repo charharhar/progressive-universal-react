@@ -6,6 +6,7 @@ import configFactory from '../../webpack/webpack.config';
 import buildVendorDll from '../../webpack/vendordll.config';
 
 import config from '../../config';
+import { log } from '../../utils'
 
 const { additionalNodeBundles } = config;
 

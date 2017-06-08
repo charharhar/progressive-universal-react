@@ -1,6 +1,17 @@
+# Project Dependencies
 /node_modules/
+
+# Build output directories
 /build/
-.happypack
 /tunnel/
+
+# Cached loader directory
+.happypack
+.cache-loader
+
+# Logs
+logs
 *.log
+
+# OSX Files
 .DS_Store

@@ -68,7 +68,7 @@ const config = {
     ],
   },
 
-  cssLoaderOptions: (mode) => ({
+  cssLoaderOptions: mode => ({
     modules: true,
     importLoaders: 1,
     localIdentName: '[name]__[local]___[hash:base64:5]',
@@ -77,11 +77,15 @@ const config = {
     sourceMap: mode === 'development',
   }),
 
-  postCssLoaderOptions: (mode) => ({
+  postCssLoaderOptions: mode => ({
     sourceMap: mode === 'development',
     config: {
       path: './tools/webpack/postcss.config.js',
     }
+  }),
+
+  sassLoaderOptions: mode => ({
+    sourceMap: mode === 'development',
   }),
 
   offlinePageName: 'offline.html',

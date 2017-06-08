@@ -22,6 +22,7 @@ export default function configFactory({ target, mode }) {
     webPath,
     clientPort,
     cssLoaderOptions,
+    sassLoaderOptions,
     postCssLoaderOptions,
   } = config;
 
@@ -88,17 +89,19 @@ export default function configFactory({ target, mode }) {
       // No errors during development to prevent crashing
       ifDev(() => new webpack.NoEmitOnErrorsPlugin()),
 
-      // [chunkhash] only change when content has change, for long term browser caching
+      // [chunkhash] only change when content has change
+      // for long term browser caching
       ifClient(() => new WebpackMd5Hash()),
 
-      // Only include what we use, instead of the entire lodash module
+      // Only include what we use,
+      // instead of the entire lodash module
       ifClient(() =>
         new LodashModuleReplacementPlugin({
           collections: true,
         })
       ),
 
-      // Generates JSON file mapping all output files
+      // Generates a JSON file mapping all of the build output files
       ifClient(() =>
         new AssetsPlugin({
           filename: 'assets.json',
@@ -109,10 +112,12 @@ export default function configFactory({ target, mode }) {
       // Enable hot module replacement plugin
       ifDevClient(() => new webpack.HotModuleReplacementPlugin()),
 
-      // Prints more readable module names in the browser console on HMR updates
+      // Prints more readable module names
+      // in the browser console on HMR updates
       ifDevClient(() => new webpack.NamedModulesPlugin()),
 
-      // Vendor dll reference to the manifest file to improve development rebuilding speeds
+      // Vendor dll reference to the manifest file
+      // to improve development rebuilding speeds
       ifDevClient(() =>
         new webpack.DllReferencePlugin({
           manifest: require(
@@ -125,7 +130,7 @@ export default function configFactory({ target, mode }) {
         })
       ),
 
-      // Extract CSS into CSS files for production build
+      // Extract CSS into CSS files only for production build
       ifProd(() =>
         new ExtractTextPlugin({
           filename: '[name]-[chunkhash].css',
@@ -133,7 +138,7 @@ export default function configFactory({ target, mode }) {
         })
       ),
 
-      // Minify JS for production build
+      // Minify JS only for production build
       ifProdClient(() =>
         new webpack.optimize.UglifyJsPlugin({
           sourceMap: true,
@@ -151,69 +156,39 @@ export default function configFactory({ target, mode }) {
         })
       ),
 
-      // HappyPack Loaders implemented
-      // Set up HappyPack JS loaders for both client/server bundles
-      new HappyPack({
-        id: 'happypack-javascript',
-        verbose: false,
-        threads: 4,
-        loaders: [{
-          path: 'babel-loader',
-          query: {
-            babelrc: false,
-            plugins: ['lodash'],
-            presets: removeEmpty([
-              'react',
-              'stage-3',
-              ifClient(['latest', { es2015: { modules: false } }]),
-              ifNode(['env', { targets: { node: true }, modules: false }]),
-            ])
-          }
-        }]
-      }),
-
-      // Set up HappyPack CSS loaders for DevClient bundles
-      // ExtractTextPlugin for Prod bundles
-      ifDevClient(() =>
-        new HappyPack({
-          id: 'happypack-css-devclient',
-          verbose: false,
-          threads: 4,
-          loaders: [
-            'style-loader',
-            {
-              loader: 'css-loader',
-              options: cssLoaderOptions(mode),
-            },
-            {
-              loader: 'postcss-loader',
-              options: postCssLoaderOptions(mode),
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-          ],
-        })
-      ),
-
       // END PLUGINS
     ]),
 
     module: {
       rules: [
+        // Javascript Loader
         {
           test: /\.js$/,
           exclude: '/node_modules/',
-          loader: 'happypack/loader?id=happypack-javascript',
+          use: [
+            'cache-loader',
+            {
+              loader: 'babel-loader',
+              query: {
+                babelrc: false,
+                plugins: ['lodash'],
+                presets: removeEmpty([
+                  'react',
+                  'stage-3',
+                  ifClient(['latest', { es2015: { modules: false } }]),
+                  ifNode(['env', { targets: { node: true }, modules: false }]),
+                ])
+              }
+            }
+          ],
           include: removeEmpty([
             ...bundleConfig.srcPaths.map(srcPath =>
               pathResolve(appRootDir.get(), srcPath),
             ),
           ]),
         },
+
+        // CSS/SCSS Loader
         ifElse(isClient || isServer)(() => ({
           test: /\.css$/,
           exclude: '/node_modules/',
@@ -231,13 +206,29 @@ export default function configFactory({ target, mode }) {
                   },
                   {
                     loader: 'sass-loader',
+                    options: sassLoaderOptions(mode),
                   },
                 ],
                 fallback: 'style-loader',
               })
             }),
             ifDevClient({
-              loaders: ['happypack/loader?id=happypack-css-devclient'],
+              use: [
+                'cache-loader',
+                'style-loader',
+                {
+                  loader: 'css-loader',
+                  options: cssLoaderOptions(mode),
+                },
+                {
+                  loader: 'postcss-loader',
+                  options: postCssLoaderOptions(mode),
+                },
+                {
+                  loader: 'sass-loader',
+                  options: sassLoaderOptions(mode),
+                },
+              ],
             }),
             ifDevNode({
               loader: 'css-loader/locals',
@@ -245,10 +236,14 @@ export default function configFactory({ target, mode }) {
             }),
           ])
         })),
+
+        // JSON Loader
         {
           test: /\.json$/,
           loader: 'json-loader',
         },
+
+        // Special file type Loader
         {
           test: /\.(ico|jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2)(\?.*)?$/,
           loader: 'file-loader',
