@@ -13,13 +13,13 @@ The reason for building this starterkit came from going through countless starte
   <dd>Has the most bare minimum structure for a React application while using the newest version of React Router. Also supports most ES2017 features.</dd>
 
   <dt>Universal Rendering with Express server</dt>
-  <dd>A very basic express server which initially serves a static string template and loads in the client scripts upon page render. Causes FOUC in development environment ONLY.</dd>
+  <dd>A basic express server which initially serves a static string template and loads in the client scripts upon page render. The application code is shared between both the server and the client.</dd>
 
   <dt>Hot reloading development environment</dt>
   <dd>Watches for any configuration changes and immediately will be reflected in your live development session by hot reloading the client and node servers. Also uses React Hot Loader to reflect any changes to components or styles without a full page reload.</dd>
 
   <dt>Webpack 2</dt>
-  <dd>Makes use of a lot of webpack's plugins and techniques such as treeshaking, HappyPack and vendorDLL packages to significantly improve bundle speeds and sizes.</dd>
+  <dd>Makes use of a lot of webpack's plugins and utilities such as treeshaking, cache-loader and vendorDLL packages to significantly improve bundle speeds and sizes.</dd>
 
   <dt>Progressive Web Application</dt>
   <dd>Utilizes a Service Worker to deliver an offline first web application. Once the SW script is loaded, the application will continue to be available to the user even without a network connection.</dd>
