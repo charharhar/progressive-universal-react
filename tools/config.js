@@ -63,7 +63,9 @@ const config = {
     js: [
       '//cdn.polyfill.io/v2/polyfill.min.js?features=default,es6',
     ],
-    css: [],
+    css: [
+      '//cdn.muicss.com/mui-0.9.17/css/mui.css',
+    ],
   },
 
   cssLoaderOptions: mode => ({

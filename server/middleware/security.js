@@ -9,9 +9,7 @@ const cspConfig = {
     connectSrc: ['*'],
     defaultSrc: ["'self'"],
     imgSrc: ["'self'"],
-    fontSrc: [
-      "'self'",
-    ],
+    fontSrc: ["'self'"],
     objectSrc: ["'self'"],
     mediaSrc: ["'self'"],
     manifestSrc: ["'self'"],
@@ -24,6 +22,7 @@ const cspConfig = {
       "'self'",
       "'unsafe-inline'",
       'blob:',
+      'cdn.muicss.com',
     ],
   }
 }

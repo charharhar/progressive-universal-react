@@ -80,6 +80,9 @@ export default function configFactory({ target, mode }) {
     resolve: {
       extensions: ['.js'],
       modules: ['node_modules'],
+      alias: {
+        'mui-css': pathResolve(appRootDir.get(), './node_modules/muicss/dist/css/mui.css'),
+      }
     },
 
     plugins: removeEmpty([
