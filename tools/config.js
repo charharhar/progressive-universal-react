@@ -61,10 +61,10 @@ const config = {
 
   cdnAssets: {
     js: [
-      'https://cdn.polyfill.io/v2/polyfill.min.js',
+      '//cdn.polyfill.io/v2/polyfill.min.js?features=default,es6',
     ],
     css: [
-      'https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css',
+      '//maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css',
     ],
   },
 

@@ -1181,7 +1181,7 @@ charm@~0.1.1:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/charm/-/charm-0.1.2.tgz#06c21eed1a1b06aeb67553cdc53e23274bac2296"
 
-chokidar@^1.4.3, chokidar@^1.6.1, chokidar@^1.7.0:
+chokidar@^1.4.3, chokidar@^1.6.1, chokidar@^1.7, chokidar@^1.7.0:
   version "1.7.0"
   resolved "https://registry.yarnpkg.com/chokidar/-/chokidar-1.7.0.tgz#798e689778151c8076b4b360e5edd28cda2bb468"
   dependencies:
@@ -1633,7 +1633,7 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-debug@*, debug@2.6.7, debug@^2.1.1, debug@^2.2.0, debug@^2.3.2, debug@^2.6, debug@^2.6.3:
+debug@*, debug@2.6.7, debug@^2.1.1, debug@^2.1.2, debug@^2.2.0, debug@^2.3.2, debug@^2.6, debug@^2.6.3:
   version "2.6.7"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.7.tgz#92bad1f6d05bbb6bba22cca88bcd0ec894c2861e"
   dependencies:
@@ -2447,7 +2447,7 @@ https-browserify@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-0.0.1.tgz#3f91365cabe60b77ed0ebba24b454e3e09d95a82"
 
-iconv-lite@~0.4.13:
+iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.15.tgz#fe265a218ac6a57cfe854927e9d04c19825eddeb"
 
@@ -3171,6 +3171,10 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
+mute-stream@~0.0.4:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
+
 nan@^2.3.0, nan@^2.3.2:
   version "2.5.1"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.5.1.tgz#d5b01691253326a97a2bbee9e61c55d8d60351e2"
@@ -3180,6 +3184,13 @@ ncname@1.0.x:
   resolved "https://registry.yarnpkg.com/ncname/-/ncname-1.0.0.tgz#5b57ad18b1ca092864ef62b0b1ed8194f383b71c"
   dependencies:
     xml-char-classes "^1.0.0"
+
+needle@1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/needle/-/needle-1.6.0.tgz#f52a5858972121618e002f8e6384cadac22d624f"
+  dependencies:
+    debug "^2.1.2"
+    iconv-lite "^0.4.4"
 
 negotiator@0.6.1:
   version "0.6.1"
@@ -3611,14 +3622,14 @@ pm2-multimeter@^0.1.2:
   dependencies:
     charm "~0.1.1"
 
-pm2@^2.4.6:
-  version "2.4.6"
-  resolved "https://registry.yarnpkg.com/pm2/-/pm2-2.4.6.tgz#8157a7c88a537ce9d2193063aeb3aee44c5129bf"
+pm2@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/pm2/-/pm2-2.5.0.tgz#11c0ff3497c22923e6221e9d78008b1cb4584bd1"
   dependencies:
     async "1.5"
     blessed "^0.1.81"
     chalk "^1.1"
-    chokidar "^1.6.1"
+    chokidar "^1.7"
     cli-table "0.3.1"
     commander "^2.9"
     cron "1.2.1"
@@ -3627,29 +3638,31 @@ pm2@^2.4.6:
     fclone "1.0.11"
     mkdirp "0.5.1"
     moment "^2.15"
+    needle "1.6.0"
     nssocket "0.6.0"
     pidusage "^1.1.0"
     pm2-axon "3.0.2"
     pm2-axon-rpc "0.4.5"
     pm2-deploy "^0.3.5"
     pm2-multimeter "^0.1.2"
-    pmx "^1.1.0"
+    pmx "^1.2.0"
+    promptly "2.2.0"
     semver "^5.2"
-    shelljs "0.7.7"
+    shelljs "0.7.8"
     source-map-support "^0.4.6"
-    sprintf-js "~1.0.2"
+    sprintf-js "1.1.1"
     vizion "^0.2"
-    yamljs "0.2.8"
+    yamljs "0.2.10"
   optionalDependencies:
     gkt "https://tgz.pm2.io/gkt-1.0.0.tgz"
 
-pmx@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/pmx/-/pmx-1.1.0.tgz#381d291eedd96b81a098a5c5f0df548047258ffd"
+pmx@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/pmx/-/pmx-1.2.0.tgz#712a9e1fdea53a9b061169cc7676b14838c87585"
   dependencies:
     debug "^2.6"
     json-stringify-safe "^5.0"
-    vxx "^1.1.1"
+    vxx "^1.2.0"
 
 postcss-advanced-variables@1.2.2:
   version "1.2.2"
@@ -4099,6 +4112,12 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
+promptly@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/promptly/-/promptly-2.2.0.tgz#2a13fa063688a2a5983b161fff0108a07d26fc74"
+  dependencies:
+    read "^1.0.4"
+
 prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.6, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@~15.5.7:
   version "15.5.10"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
@@ -4291,6 +4310,12 @@ read-pkg@^1.0.0:
     load-json-file "^1.0.0"
     normalize-package-data "^2.3.2"
     path-type "^1.0.0"
+
+read@^1.0.4:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/read/-/read-1.0.7.tgz#b3da19bd052431a97671d44a42634adf710b40c4"
+  dependencies:
+    mute-stream "~0.0.4"
 
 readable-stream@1.0:
   version "1.0.34"
@@ -4625,9 +4650,9 @@ shebang-regex@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/shebang-regex/-/shebang-regex-1.0.0.tgz#da42f49740c0b42db2ca9728571cb190c98efea3"
 
-shelljs@0.7.7:
-  version "0.7.7"
-  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.7.7.tgz#b2f5c77ef97148f4b4f6e22682e10bba8667cff1"
+shelljs@0.7.8:
+  version "0.7.8"
+  resolved "https://registry.yarnpkg.com/shelljs/-/shelljs-0.7.8.tgz#decbcf874b0d1e5fb72e14b164a9683048e9acb3"
   dependencies:
     glob "^7.0.0"
     interpret "^1.0.0"
@@ -4708,6 +4733,10 @@ spdx-expression-parse@~1.0.0:
 spdx-license-ids@^1.0.2:
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-1.2.2.tgz#c9df7a3424594ade6bd11900d596696dc06bac57"
+
+sprintf-js@1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.1.1.tgz#36be78320afe5801f6cea3ee78b6e5aab940ea0c"
 
 sprintf-js@~1.0.2:
   version "1.0.3"
@@ -5070,9 +5099,9 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-vxx@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/vxx/-/vxx-1.1.1.tgz#fb4ea1233579bff54a1c37c7ae3f32a0363aeb34"
+vxx@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/vxx/-/vxx-1.2.2.tgz#741fb51c6f11d3383da6f9b92018a5d7ba807611"
   dependencies:
     continuation-local-storage "^3.1.4"
     debug "^2.6.3"
@@ -5258,9 +5287,9 @@ yallist@^2.0.0:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/yallist/-/yallist-2.1.2.tgz#1c11f9218f076089a47dd512f93c6699a6a81d52"
 
-yamljs@0.2.8:
-  version "0.2.8"
-  resolved "https://registry.yarnpkg.com/yamljs/-/yamljs-0.2.8.tgz#ef23fb006e62f6ae07b406aa2a949561f336ea5c"
+yamljs@0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/yamljs/-/yamljs-0.2.10.tgz#481cc7c25ca73af59f591f0c96e3ce56c757a40f"
   dependencies:
     argparse "^1.0.7"
     glob "^7.0.5"

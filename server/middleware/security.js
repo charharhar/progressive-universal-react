@@ -11,7 +11,7 @@ const cspConfig = {
     imgSrc: ["'self'"],
     fontSrc: [
       "'self'",
-      'https://maxcdn.bootstrapcdn.com',
+      'maxcdn.bootstrapcdn.com',
     ],
     objectSrc: ["'self'"],
     mediaSrc: ["'self'"],
@@ -19,13 +19,13 @@ const cspConfig = {
     scriptSrc: [
       "'self'",
       "'unsafe-inline'",
-      'https://cdn.polyfill.io',
+      'cdn.polyfill.io',
     ],
     styleSrc: [
       "'self'",
       "'unsafe-inline'",
       'blob:',
-      'https://maxcdn.bootstrapcdn.com',
+      'maxcdn.bootstrapcdn.com',
     ],
   }
 }
