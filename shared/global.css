@@ -1,12 +1,28 @@
 /*
- *     Variables
+ * ====================================================
+ *      Variables
+ * ====================================================
+ */
+
+/*
+ * Theme
  */
 
 $major-color: #800000;
 $minor-color: #0A82CC;
 $font-color: #222;
 
+/*
+ * Typography
+ */
+
 $font-stack: Helvetica, sans-serif;
+
+/*
+ * ====================================================
+ *      Normalize
+ * ====================================================
+ */
 
 *, *:before, *:after {
   box-sizing: border-box;
@@ -27,7 +43,6 @@ menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
   margin: 0;
   padding: 0;
-  border: 0;
   font: inherit;
   font-size: 100%;
   vertical-align: baseline;

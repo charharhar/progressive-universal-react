@@ -11,7 +11,6 @@ const cspConfig = {
     imgSrc: ["'self'"],
     fontSrc: [
       "'self'",
-      'maxcdn.bootstrapcdn.com',
     ],
     objectSrc: ["'self'"],
     mediaSrc: ["'self'"],
@@ -25,7 +24,6 @@ const cspConfig = {
       "'self'",
       "'unsafe-inline'",
       'blob:',
-      'maxcdn.bootstrapcdn.com',
     ],
   }
 }
