@@ -56,6 +56,7 @@ class HotClientServer {
       quiet: true,
       noInfo: true,
       publicPath: clientCompiler.options.output.publicPath,
+      headers: { 'Access-Control-Allow-Origin': '*' },
     })
     this.webpackHotMiddleware = createWebpackHotMiddleware(clientCompiler);
 
